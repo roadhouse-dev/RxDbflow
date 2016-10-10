@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
+group='com.github.roadhousedigital'
+
 
 android {
     compileSdkVersion 24
@@ -20,6 +22,7 @@ android {
         }
     }
 }
+
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -59,6 +62,10 @@ configure(zipLintReport) {
     description = 'Create a lint report archive'
 }
 
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -70,3 +77,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
 }
+
