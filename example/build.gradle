@@ -20,6 +20,32 @@ android {
     }
 }
 
+
+task(type: Zip, "zipTestReport") {
+    from("${rootDir.absolutePath}/example/build/reports/androidTests/connected/")
+    archiveName 'test_report_example.zip'
+    destinationDir file("${rootDir.absolutePath}/app/build/reports/")
+}
+
+configure(zipTestReport) {
+    group = 'verification'
+    description = 'Create a test report archive'
+}
+
+task(type: Zip, "zipLintReport") {
+    from "${rootDir.absolutePath}/example/build/outputs/"
+    include "lint-results-debug.html"
+    include "lint-results-debug_files/*"
+    archiveName 'lint_report_example.zip'
+    destinationDir file("${rootDir.absolutePath}/example/build/reports/")
+}
+
+configure(zipLintReport) {
+    group = 'verification'
+    description = 'Create a lint report archive'
+}
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

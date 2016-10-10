@@ -36,9 +36,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 task(type: Zip, "zipTestReport") {
-    from("${rootDir.absolutePath}/app/build/reports/androidTests/connected/")
-    archiveName 'test_report.zip'
-    destinationDir file("${rootDir.absolutePath}/app/build/reports/")
+    from("${rootDir.absolutePath}/library/build/reports/androidTests/connected/")
+    archiveName 'test_report_library.zip'
+    destinationDir file("${rootDir.absolutePath}/library/build/reports/")
 }
 
 configure(zipTestReport) {
@@ -47,11 +47,11 @@ configure(zipTestReport) {
 }
 
 task(type: Zip, "zipLintReport") {
-    from "${rootDir.absolutePath}/app/build/outputs/"
+    from "${rootDir.absolutePath}/library/build/outputs/"
     include "lint-results-debug.html"
     include "lint-results-debug_files/*"
-    archiveName 'lint_report.zip'
-    destinationDir file("${rootDir.absolutePath}/app/build/reports/")
+    archiveName 'lint_report_library.zip'
+    destinationDir file("${rootDir.absolutePath}/library/build/reports/")
 }
 
 configure(zipLintReport) {
