@@ -8,18 +8,20 @@ import com.raizlabs.android.dbflow.sql.language.Where;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.structure.Model;
 
-
+/**
+ * Description: Defines the SQL WHERE statement of the query.
+ */
 public class RxWhere<TModel extends Model> extends BaseModelQueriableObservable<TModel>
         implements Query, RxTransformable<TModel> {
 
     Where<TModel> mRealWhere;
 
-    public RxWhere(Where<TModel> where) {
+    RxWhere(Where<TModel> where) {
         super(where);
         mRealWhere = where;
     }
 
-    public RxWhere<TModel> andAll(SQLCondition[] conditions) {
+    RxWhere<TModel> andAll(SQLCondition[] conditions) {
         mRealWhere.andAll(conditions);
         return this;
     }

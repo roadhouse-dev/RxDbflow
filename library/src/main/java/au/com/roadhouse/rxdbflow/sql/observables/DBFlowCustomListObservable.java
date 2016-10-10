@@ -17,7 +17,7 @@ import rx.Observable;
 import rx.Subscriber;
 
 /**
- * Given a RxSQLite query, emits the results from the query as a CustomList.
+ * Given a RxSQLite query, emits the results from the query as a List of custom models.
  */
 public class DBFlowCustomListObservable<TQueryModel extends BaseQueryModel, TModel extends Model> extends Observable<List<TQueryModel>> {
 
@@ -80,7 +80,7 @@ public class DBFlowCustomListObservable<TQueryModel extends BaseQueryModel, TMod
 
         private FlowContentObserver mFlowContentObserver;
 
-        public DBFlowOnChangeOperator() {
+        private DBFlowOnChangeOperator() {
             mFlowContentObserver = new FlowContentObserver();
         }
 

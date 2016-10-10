@@ -11,23 +11,44 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.BaseQueryModel;
 import com.raizlabs.android.dbflow.structure.Model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import rx.Observable;
 import rx.Subscriber;
 
-
+/**
+ * Given a RxSQLite query, emits the the first element from the query as a custom model.
+ */
 public class DBFlowCustomModelObservable<TQueryModel extends BaseQueryModel, TModel extends Model> extends Observable<TQueryModel> {
 
     private final Class<TQueryModel> mModelClazz;
     private final ModelQueriable<TModel> mBaseModelQueriable;
+    private List<Class<? extends Model>> mSubscribedClasses;
 
+    /**
+     * Creates a new observable which runs a query and emits the first element in the result set as a CustomModel
+     * @param clazz The table/view model in which the FlowCursorList will contain
+     * @param baseModelQueriable The query to run
+     */
     public DBFlowCustomModelObservable(Class<TQueryModel> clazz, ModelQueriable<TModel> baseModelQueriable) {
         super(new OnDBFlowSubscribeWithChanges<>(clazz, baseModelQueriable));
         mModelClazz = clazz;
         mBaseModelQueriable = baseModelQueriable;
+        mSubscribedClasses = new ArrayList<>();
     }
 
-    public Observable<TQueryModel> subscribeToChanges(){
-        return lift(new DBFlowOnChangeOperator(mModelClazz, mBaseModelQueriable));
+    /**
+     * Observes changes on the current table, restarts the query on change, and emits the updated
+     * query result to any subscribers
+     * @param tableToListen The tables to observe for changes
+     * @return An observable which observes any changes in the specified tables
+     */
+    @SafeVarargs
+    public final Observable<TQueryModel> restartOnChange(Class<TModel>... tableToListen){
+        Collections.addAll(mSubscribedClasses, tableToListen);
+        return lift(new DBFlowOnChangeOperator());
     }
 
     private static class OnDBFlowSubscribeWithChanges<AQueryModel extends BaseQueryModel, TModel extends Model> implements OnSubscribe<AQueryModel> {
@@ -49,13 +70,9 @@ public class DBFlowCustomModelObservable<TQueryModel extends BaseQueryModel, TMo
 
     private class DBFlowOnChangeOperator implements Observable.Operator<TQueryModel, TQueryModel> {
 
-        private final Class<TQueryModel> mModelClazz;
-        private final ModelQueriable<TModel> mBaseModelQueriable;
         private FlowContentObserver mFlowContentObserver;
 
-        public DBFlowOnChangeOperator(Class<TQueryModel> modelClazz, ModelQueriable<TModel> baseModelQueriable) {
-            mModelClazz = modelClazz;
-            mBaseModelQueriable = baseModelQueriable;
+        public DBFlowOnChangeOperator() {
             mFlowContentObserver = new FlowContentObserver();
         }
 
@@ -74,7 +91,9 @@ public class DBFlowCustomModelObservable<TQueryModel extends BaseQueryModel, TMo
 
                 @Override
                 public void onNext(TQueryModel tModels) {
-                    mFlowContentObserver.registerForContentChanges(FlowManager.getContext(), mModelClazz);
+                    for (int i = 0; i < mSubscribedClasses.size(); i++) {
+                        mFlowContentObserver.registerForContentChanges(FlowManager.getContext(), mSubscribedClasses.get(i));
+                    }
                     mFlowContentObserver.addModelChangeListener(new FlowContentObserver.OnModelStateChangedListener() {
                         @Override
                         public void onModelStateChanged(@Nullable Class<? extends Model> table, BaseModel.Action action, @NonNull SQLCondition[] primaryKeyValues) {

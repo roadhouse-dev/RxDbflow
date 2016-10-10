@@ -9,25 +9,56 @@ import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.Model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import rx.Observable;
 import rx.Subscriber;
 
-
+/**
+ * Given a RxSQLite query, emits the results from the query as a CursorResult of models.
+ */
 public class DBFlowResultObservable<TModel extends Model> extends Observable<CursorResult<TModel>> {
 
     private final Class<TModel> mModelClazz;
     private final ModelQueriable<TModel> mBaseModelQueriable;
+    private List<Class<? extends Model>> mSubscribedClasses;
 
-
+    /**
+     * Creates a new observable which runs a query and emits the result as a CursorResult
+     * @param clazz The table/view model in which the CursorResult will contain
+     * @param baseModelQueriable The query to run
+     */
     public DBFlowResultObservable(Class<TModel> clazz, final ModelQueriable<TModel> baseModelQueriable) {
         super(new OnDBFlowSubscribeWithChanges<>(baseModelQueriable));
         mModelClazz = clazz;
         mBaseModelQueriable = baseModelQueriable;
+        mSubscribedClasses = new ArrayList<>();
     }
 
+    /**
+     * Observes changes on the current table, restarting the query on change and emits the updated
+     * query results to any subscribers
+     * @return An observable which observes any changes in the current table
+     */
     public Observable<CursorResult<TModel>> restartOnChange(){
+        mSubscribedClasses.add(mModelClazz);
         return lift(new DBFlowOnChangeOperator());
     }
+
+    /**
+     * Observes changes on the current table, restarts the query on change, and emits the updated
+     * query results to any subscribers
+     * @param tableToListen The tables to observe for changes
+     * @return An observable which observes any changes in the specified tables
+     */
+    @SafeVarargs
+    public final Observable<CursorResult<TModel>> restartOnChange(Class<TModel>... tableToListen){
+        Collections.addAll(mSubscribedClasses, tableToListen);
+        return lift(new DBFlowOnChangeOperator());
+    }
+
 
     private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<CursorResult<AModel>> {
 
@@ -66,7 +97,9 @@ public class DBFlowResultObservable<TModel extends Model> extends Observable<Cur
 
                 @Override
                 public void onNext(CursorResult<TModel> tModels) {
-                    mFlowContentObserver.registerForContentChanges(FlowManager.getContext(), mModelClazz);
+                    for (int i = 0; i < mSubscribedClasses.size(); i++) {
+                        mFlowContentObserver.registerForContentChanges(FlowManager.getContext(), mSubscribedClasses.get(i));
+                    }
                     mFlowContentObserver.addOnTableChangedListener(
                             new FlowContentObserver.OnTableChangedListener() {
                                 @Override

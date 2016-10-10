@@ -12,16 +12,33 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import rx.Observable;
 import rx.Subscriber;
 
-
+/**
+ * Given an RxSQLite query, executes a statement without a result.
+ * @param <TModel> The model representing the table to execute against
+ */
 public class DBFlowExecuteObservable<TModel extends Model> extends Observable<Void> {
 
     private final Class<? extends Model> mModelClazz;
     private final BaseQueriable<TModel> mBaseQueriable;
 
+    /**
+     * Creates a new Observable which executes a sql statement against a table
+     * @param clazz The model class representing the table to execute against
+     * @param modelQueriable The query to execute
+     * @param databaseWrapper The database in which the target table resides
+     */
     public DBFlowExecuteObservable(Class<? extends Model> clazz, BaseQueriable<TModel> modelQueriable, @Nullable DatabaseWrapper databaseWrapper) {
         super(new OnDBFlowSubscribe(modelQueriable, databaseWrapper));
         mModelClazz = clazz;
         mBaseQueriable = modelQueriable;
+    }
+
+    /**
+     * Publishes the results to all onchange observers after the statement has been executued.
+     * @return An observable which publishes the change to all onchange observers
+     */
+    public Observable<Void> publishTableUpdates(){
+        return lift(new DBFlowNotifyOfUpdate());
     }
 
     private static class OnDBFlowSubscribe implements OnSubscribe<Void> {
@@ -44,10 +61,6 @@ public class DBFlowExecuteObservable<TModel extends Model> extends Observable<Vo
 
             subscriber.onNext(null);
         }
-    }
-
-    public Observable<Void> publishTableUpdates(){
-        return lift(new DBFlowNotifyOfUpdate());
     }
 
     private class DBFlowNotifyOfUpdate implements Observable.Operator<Void, Void> {
