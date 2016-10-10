@@ -58,27 +58,34 @@ RxSQLite.select()
 
 
 ###Other observables 
+Retrieve result as a Cursor
 
 ```java
-
-Retrieve result as a Cursor
 .asResultsObservable() 
-
+```
 Retrieve result as a FlowQueryList
+```java
 .asQueryListObservable
+```
+
 
 Retrieve a single QueryModel
+```java
 .asCustomSingleObservable(QueryModel.class)
+```
+
 
 Retrieve results as a list of QueryModel
+```java
 .asCustomListObservable(QueryModel.class)
 ```
 
+
+
 ##CRUD Operations
 
+As of DBFlow 3.1.1 the following will not trigger any onChange listeners
 ```java
-As of DBFlow 3.1.1 this will not trigger any onChange listeners
-
 RxSQLite.update(TestModel.class)
                 .set(TestModel_Table.first_name.eq("UPDATED"))
                 .where(TestModel_Table.first_name.eq("Bob"))
@@ -86,9 +93,9 @@ RxSQLite.update(TestModel.class)
                 .subscribe();
  ```
 
-```java
 Adding .publishTableUpdates() will trigger any onChangeListers that might be listening to changes on the current table
 
+```java
 RxSQLite.update(TestModel.class)
                 .set(TestModel_Table.first_name.eq("UPDATED"))
                 .where(TestModel_Table.first_name.eq("Bob"))
