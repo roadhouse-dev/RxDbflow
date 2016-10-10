@@ -15,5 +15,6 @@ public class ExampleApplication extends Application {
     @Override
     public void onTerminate() {
         FlowManager.destroy();
+        super.onTerminate();
     }
 }
