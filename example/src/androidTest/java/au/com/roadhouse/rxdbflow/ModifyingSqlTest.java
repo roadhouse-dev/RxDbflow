@@ -49,6 +49,7 @@ public class ModifyingSqlTest {
                 .set(TestModel_Table.first_name.eq("UPDATED"))
                 .where(TestModel_Table.first_name.eq("Bob"))
                 .asExecuteObservable()
+                .publishTableUpdates()
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {
