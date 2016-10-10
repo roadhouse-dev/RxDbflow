@@ -1,4 +1,4 @@
-# RxDbflow
+# RxDBFlow
 RxJava bindings for DBFlow models, and query language
 
 #Download
