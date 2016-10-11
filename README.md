@@ -37,7 +37,7 @@ dependencies {
 }
 ```
 
-While you can change the dbflow version, only 3.1.1 is currently supported. 
+While you can change the dbflow version, only 3.1.1 is official supported. 
 
 
 #Build
