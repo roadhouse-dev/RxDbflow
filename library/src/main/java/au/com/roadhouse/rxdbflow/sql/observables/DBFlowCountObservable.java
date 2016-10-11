@@ -1,8 +1,8 @@
 package au.com.roadhouse.rxdbflow.sql.observables;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.annotation.NotNull;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
 import com.raizlabs.android.dbflow.sql.language.BaseQueriable;
@@ -37,7 +37,7 @@ public class DBFlowCountObservable<TModel extends Model> extends Observable<Long
      * @param baseModelQueriable The query to run when computing the count
      * @param databaseWrapper The database wrapper that the target table/view belongs too.
      */
-    public DBFlowCountObservable(@NotNull Class<TModel> clazz, final BaseQueriable<TModel> baseModelQueriable,
+    public DBFlowCountObservable(@NonNull Class<TModel> clazz, final BaseQueriable<TModel> baseModelQueriable,
                                  @Nullable DatabaseWrapper databaseWrapper) {
         super(new OnDBFlowSubscribeWithChanges<>(baseModelQueriable, databaseWrapper));
         mModelClazz = clazz;
