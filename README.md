@@ -1,3 +1,5 @@
+[![Release](https://jitpack.io/v/roadhouse-dev/Repo.svg)](https://jitpack.io/roadhouse-dev/Repo)
+
 # RxDBFlow
 RxJava bindings for DBFlow models, and query language
 
