@@ -37,7 +37,7 @@ dependencies {
 }
 ```
 
-While you can change the dbflow version, only 3.1.1 is currently supported. 
+While you can change the dbflow version, only 3.1.1 is official supported. 
 
 
 #Build
@@ -47,7 +47,7 @@ $ ./gradlew build
 ```
 
 #DBFlow documentation
-For help with DBFlow please take a look at [DBFlow Github](https://github.com/Raizlabs/DBFlow)
+For help with DBFlow please take a look at [DBFlow GitHub](https://github.com/Raizlabs/DBFlow)
 
 #Sample usage
 
@@ -129,7 +129,7 @@ RxSQLite.update(TestModel.class)
                 .subscribe();
  ```
 
-Adding .publishTableUpdates() will trigger any onChangeListers that might be listening to changes on the current table
+Adding .publishTableUpdates() will trigger any onChangeListeners that might be listening to changes on the current table
 
 ```java
 RxSQLite.update(TestModel.class)
@@ -142,7 +142,7 @@ RxSQLite.update(TestModel.class)
 
 ##Transactions
 
-RxDBFlow provides two easy to use transaction observable structures, depending what type of operations being performed in the transaction:
+RxDBFlow provides two easy to use transaction observable structures, depending what type of operations are being performed in the transaction:
 
 ###RxGenericTransactionBlock
 Wraps any type of database operations within a transaction
@@ -204,8 +204,9 @@ Wraps a list of models and operations to perform on those models
 
 
 #Bugs and Feedback
-For RxDBFlow bugs, questions and discussions please use the [Github Issues](https://github.com/roadhouse-dev/RxDbflow/issues).
-For DBFlow specific bugs, questions and discussions please use the [Github Issues](https://github.com/Raizlabs/DBFlow/issues).
+For RxDBFlow bugs, questions and discussions please use the [GitHub Issues](https://github.com/roadhouse-dev/RxDbflow/issues).
+
+For DBFlow specific bugs, questions and discussions please use the [GitHub Issues](https://github.com/Raizlabs/DBFlow/issues).
 
 #Pull Requests
 All pull requests are welcome, however to make the whole process smoother please use the following guides
