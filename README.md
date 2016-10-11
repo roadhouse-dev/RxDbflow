@@ -47,7 +47,7 @@ $ ./gradlew build
 ```
 
 #DBFlow documentation
-For help with DBFlow please take a look at [DBFlow Github](https://github.com/Raizlabs/DBFlow)
+For help with DBFlow please take a look at [DBFlow GitHub](https://github.com/Raizlabs/DBFlow)
 
 #Sample usage
 
@@ -204,8 +204,9 @@ Wraps a list of models and operations to perform on those models
 
 
 #Bugs and Feedback
-For RxDBFlow bugs, questions and discussions please use the [Github Issues](https://github.com/roadhouse-dev/RxDbflow/issues).
-For DBFlow specific bugs, questions and discussions please use the [Github Issues](https://github.com/Raizlabs/DBFlow/issues).
+For RxDBFlow bugs, questions and discussions please use the [GitHub Issues](https://github.com/roadhouse-dev/RxDbflow/issues).
+
+For DBFlow specific bugs, questions and discussions please use the [GitHub Issues](https://github.com/Raizlabs/DBFlow/issues).
 
 #Pull Requests
 All pull requests are welcome, however to make the whole process smoother please use the following guides
