@@ -129,7 +129,7 @@ RxSQLite.update(TestModel.class)
                 .subscribe();
  ```
 
-Adding .publishTableUpdates() will trigger any onChangeListers that might be listening to changes on the current table
+Adding .publishTableUpdates() will trigger any onChangeListeners that might be listening to changes on the current table
 
 ```java
 RxSQLite.update(TestModel.class)
@@ -142,7 +142,7 @@ RxSQLite.update(TestModel.class)
 
 ##Transactions
 
-RxDBFlow provides two easy to use transaction observable structures, depending what type of operations being performed in the transaction:
+RxDBFlow provides two easy to use transaction observable structures, depending what type of operations are being performed in the transaction:
 
 ###RxGenericTransactionBlock
 Wraps any type of database operations within a transaction
