@@ -17,6 +17,9 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteObservable;
 import rx.Observable;
 
+/**
+ * Provides a set block for a select statement
+ */
 public class RxSet<TModel extends Model> implements WhereBase<TModel>, QueriableObservable, RxTransformable<TModel>{
 
     Set<TModel> mRealSet;
@@ -99,6 +102,7 @@ public class RxSet<TModel extends Model> implements WhereBase<TModel>, Queriable
         Where<TModel> where = mRealSet.offset(offset);
         return new RxWhere<>(where);
     }
+
 
     @Override
     public RxWhere<TModel> having(SQLCondition... conditions) {

@@ -7,7 +7,9 @@ import com.raizlabs.android.dbflow.sql.language.Set;
 import com.raizlabs.android.dbflow.sql.language.Update;
 import com.raizlabs.android.dbflow.structure.Model;
 
-
+/**
+ * Creates an update SQL query
+ */
 public class RxUpdate<TModel extends Model> implements Query {
 
     private final Update<TModel> mRealUpdate;
@@ -21,12 +23,18 @@ public class RxUpdate<TModel extends Model> implements Query {
         return mRealUpdate.getQuery();
     }
 
+    /**
+     * Adds a conflict action to the update statement
+     * @param conflictAction The action to take on conflict
+     * @return An RxUpdate instance
+     */
     public RxUpdate conflictAction(ConflictAction conflictAction) {
         mRealUpdate.conflictAction(conflictAction);
         return this;
     }
 
     /**
+     * Adds a rollback action on conflict
      * @return This instance.
      * @see ConflictAction#ROLLBACK
      */
@@ -35,6 +43,7 @@ public class RxUpdate<TModel extends Model> implements Query {
     }
 
     /**
+     * Adds an abort action on conflict
      * @return This instance.
      * @see ConflictAction#ABORT
      */
@@ -43,6 +52,7 @@ public class RxUpdate<TModel extends Model> implements Query {
     }
 
     /**
+     * Adds a replace action on conflict
      * @return This instance.
      * @see ConflictAction#REPLACE
      */
@@ -51,6 +61,7 @@ public class RxUpdate<TModel extends Model> implements Query {
     }
 
     /**
+     * Adds a fail action on conflict
      * @return This instance.
      * @see ConflictAction#FAIL
      */
@@ -59,6 +70,7 @@ public class RxUpdate<TModel extends Model> implements Query {
     }
 
     /**
+     * Adds an ignore action on conflict
      * @return This instance.
      * @see ConflictAction#IGNORE
      */
@@ -67,7 +79,7 @@ public class RxUpdate<TModel extends Model> implements Query {
     }
 
     /**
-     * Begins a SET piece of the SQL query
+     * Begins a SET block for the SQL query
      *
      * @param conditions The array of conditions that define this SET statement
      * @return A SET query piece of this statement

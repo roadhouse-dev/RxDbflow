@@ -31,52 +31,81 @@ public class BaseModelQueriableObservable<TModel extends Model> extends BaseQuer
         mRealModelQueriable = realModelQueriable;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Observable<TModel> asSingleObservable(boolean subscribeToChanges) {
-        return new DBFlowModelObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable, subscribeToChanges, null);
+    public Observable<TModel> asSingleObservable() {
+        return new DBFlowModelObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Observable<TModel> asSingleObservable(boolean subscribeToChanges, DatabaseWrapper databaseWrapper) {
-        return new DBFlowModelObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable, subscribeToChanges, databaseWrapper);
+    public Observable<TModel> asSingleObservable(DatabaseWrapper databaseWrapper) {
+        return new DBFlowModelObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable, databaseWrapper);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DBFlowListObservable<TModel> asListObservable() {
         return new DBFlowListObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DBFlowListObservable<TModel> asListObservable(DatabaseWrapper databaseWrapper) {
         return new DBFlowListObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable, databaseWrapper);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Observable<CursorResult<TModel>> asResultsObservable() {
         return new DBFlowResultObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Observable<FlowQueryList<TModel>> asQueryListObservable() {
         return new DBFlowQueryListObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Observable<FlowCursorList<TModel>> asCursorListObservable() {
         return new DBFlowCursorListObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable);
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DBFlowCursorObservable asQueryObservable() {
         return new DBFlowCursorObservable(mRealModelQueriable.getTable(), mRealModelQueriable, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <AQueryModel extends BaseQueryModel>Observable<AQueryModel> asCustomSingleObservable(Class<AQueryModel> customClazz) {
         return new DBFlowCustomModelObservable<>(customClazz, mRealModelQueriable);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <AQueryModel extends BaseQueryModel>Observable<List<AQueryModel>> asCustomListObservable(Class<AQueryModel> customClazz) {
         return new DBFlowCustomListObservable<>(customClazz, mRealModelQueriable);

@@ -15,16 +15,18 @@ import com.raizlabs.android.dbflow.structure.Model;
 
 import java.util.List;
 
+/**
+ * Creates an insert SQL statement
+ */
 public class RxInsert<TModel extends Model> extends BaseQueriableObservable implements Query {
 
     private final Insert<TModel> mRealInsert;
 
+    @SuppressWarnings("unchecked")
     RxInsert(Class<TModel> table) {
         super(createInsert(table));
-        //noinspection unchecked
         mRealInsert = (Insert<TModel>) getRealQueriable();
     }
-
 
     private static <TModel extends Model> Insert<TModel> createInsert(Class<TModel> table) {
         return new Insert<>(table);
@@ -41,11 +43,23 @@ public class RxInsert<TModel extends Model> extends BaseQueriableObservable impl
         return this;
     }
 
+    /**
+     * The optional columns to specify. If specified, the values length must correspond to these columns, and
+     * each column has a 1-1 relationship to the values.
+     *
+     * @param properties The columns to use
+     */
     public RxInsert<TModel> columns(IProperty... properties) {
         mRealInsert.columns(properties);
         return this;
     }
 
+    /**
+     * The optional columns to specify. If specified, the values length must correspond to these columns, and
+     * each column has a 1-1 relationship to the values.
+     *
+     * @param properties The columns to use
+     */
     public RxInsert<TModel> columns(List<IProperty> properties) {
         mRealInsert.columns(properties);
         return this;

@@ -18,10 +18,13 @@ import com.raizlabs.android.dbflow.structure.Model;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCountObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCursorObservable;
 
+/**
+ * Constructs a From clause for a SQL query
+ */
 public class RxFrom<TModel extends Model> extends BaseModelQueriableObservable<TModel> implements Query,
         WhereBase<TModel>,  RxTransformable<TModel>, ModelQueriableObservable<TModel> {
 
-    From<TModel> mRealFrom;
+    private From<TModel> mRealFrom;
 
     RxFrom(From<TModel> realFrom) {
         super(realFrom);
@@ -165,41 +168,65 @@ public class RxFrom<TModel extends Model> extends BaseModelQueriableObservable<T
         return mRealFrom.getQueryBuilderBase();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RxWhere<TModel> groupBy(NameAlias... nameAliases) {
         return where().groupBy(nameAliases);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RxWhere<TModel> groupBy(IProperty... properties) {
         return where().groupBy(properties);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RxWhere<TModel> orderBy(NameAlias nameAlias, boolean ascending) {
         return where().orderBy(nameAlias, ascending);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RxWhere<TModel> orderBy(IProperty property, boolean ascending) {
         return where().orderBy(property, ascending);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RxWhere<TModel> orderBy(OrderBy orderBy) {
         return where().orderBy(orderBy);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RxWhere<TModel> limit(int count) {
         return where().limit(count);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RxWhere<TModel> offset(int offset) {
         return where().offset(offset);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RxWhere<TModel> having(SQLCondition... conditions) {
         return this.where().having(conditions);

@@ -34,8 +34,8 @@ public class DBFlowModelObservable<TModel extends Model> extends Observable<TMod
      * @param baseModelQueriable The query to run
      */
     public DBFlowModelObservable(Class<TModel> clazz, ModelQueriable<TModel> baseModelQueriable,
-                                 boolean subscribeToChanges, @Nullable DatabaseWrapper databaseWrapper) {
-        super(new OnDBFlowSubscribeWithChanges<>(clazz, baseModelQueriable, subscribeToChanges, databaseWrapper));
+                                 @Nullable DatabaseWrapper databaseWrapper) {
+        super(new OnDBFlowSubscribeWithChanges<>(baseModelQueriable, databaseWrapper));
         mModelClazz = clazz;
         mBaseModelQueriable = baseModelQueriable;
         mDatabaseWrapper = databaseWrapper;
@@ -74,19 +74,13 @@ public class DBFlowModelObservable<TModel extends Model> extends Observable<TMod
     }
 
     private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<AModel> {
-
-        private final boolean mSubscribeToModelChanges;
         private final ModelQueriable<AModel> mBaseModelQueriable;
-        private final Class<AModel> mClazz;
         private final DatabaseWrapper mDatabaseWrapper;
-        private FlowContentObserver mFlowContentObserver = new FlowContentObserver();
 
-        OnDBFlowSubscribeWithChanges(Class<AModel> clazz, ModelQueriable<AModel> baseModelQueriable,
-                                     boolean subscribeToModelChanges, DatabaseWrapper databaseWrapper){
-           mSubscribeToModelChanges = subscribeToModelChanges;
+        OnDBFlowSubscribeWithChanges(ModelQueriable<AModel> baseModelQueriable,
+                                    DatabaseWrapper databaseWrapper){
             mBaseModelQueriable = baseModelQueriable;
             mDatabaseWrapper = databaseWrapper;
-            mClazz = clazz;
         }
 
         @Override

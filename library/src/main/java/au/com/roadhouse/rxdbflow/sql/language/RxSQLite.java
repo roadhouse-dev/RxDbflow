@@ -14,6 +14,9 @@ import com.raizlabs.android.dbflow.sql.language.property.Property;
 import com.raizlabs.android.dbflow.sql.trigger.Trigger;
 import com.raizlabs.android.dbflow.structure.Model;
 
+/**
+ * Provides an entry point into all RxSqlite queries
+ */
 public class RxSQLite {
     /**
      * @param properties The properties/columns to SELECT.
