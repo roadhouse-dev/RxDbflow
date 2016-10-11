@@ -5,7 +5,40 @@
 RxJava bindings for DBFlow models, and query language
 
 #Download
-Available soon
+
+Add the JitPack repository to your root build file
+
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+
+allprojects {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+
+
+Add the dependencies:
+```groovy
+dependencies {
+    apt 'com.github.Raizlabs.DBFlow:dbflow-processor:3.1.1'
+    compile 'com.github.Raizlabs.DBFlow:dbflow-core:3.1.1'
+    compile 'com.github.Raizlabs.DBFlow:dbflow:3.1.1'
+    compile 'com.github.roadhouse-dev:RxDbflow:1.0.0'
+}
+```
+
+While you can change the dbflow version, only 3.1.1 is currently supported. 
+
 
 #Build
 ```bash
@@ -115,7 +148,7 @@ RxDBFlow provides two easy to use transaction observable structures, depending w
 Wraps any type of database operations within a transaction
 
 ```java
-mDataSubscribers.add(new RxGenericTransactionBlock.Builder(TestModel.class)
+  new RxGenericTransactionBlock.Builder(TestModel.class)
                 .addOperation(new RxGenericTransactionBlock.TransactionOperation() {
                     @Override
                     public boolean onProcess(DatabaseWrapper databaseWrapper) {
@@ -171,7 +204,8 @@ Wraps a list of models and operations to perform on those models
 
 
 #Bugs and Feedback
-For bugs, questions and discussions please use the [Github Issues](https://github.com/roadhouse-dev/RxDbflow/issues).
+For RxDBFlow bugs, questions and discussions please use the [Github Issues](https://github.com/roadhouse-dev/RxDbflow/issues).
+For DBFlow specific bugs, questions and discussions please use the [Github Issues](https://github.com/Raizlabs/DBFlow/issues).
 
 #Pull Requests
 All pull requests are welcome, however to make the whole process smoother please use the following guides
