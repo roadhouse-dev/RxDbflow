@@ -9,9 +9,6 @@ import com.raizlabs.android.dbflow.sql.language.WhereBase;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.structure.Model;
 
-import static android.R.attr.offset;
-
-
 public class RxIndexedBy <TModel extends Model> implements WhereBase<TModel>, RxTransformable<TModel> {
 
     IndexedBy<TModel> mRealIndexedBy;
