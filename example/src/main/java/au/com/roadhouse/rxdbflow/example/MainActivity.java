@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         modelOne.setLastName("Don");
 
         modelOne.insertAsObservable()
-                .subscribeOn(DBFlowSchedulers.getBackgroundScheduler())
+                .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Void>() {
                     @Override
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         modelTwo.insertAsObservable()
-                .subscribeOn(DBFlowSchedulers.getBackgroundScheduler())
+                .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Void>() {
                     @Override
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         modelThree.insertAsObservable()
-                  .subscribeOn(DBFlowSchedulers.getBackgroundScheduler())
+                  .subscribeOn(DBFlowSchedulers.background())
                   .observeOn(AndroidSchedulers.mainThread())
                   .subscribe(new Action1<Void>() {
                       @Override
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                 .addModel(modelTwo)
                 .addModel(modelThree)
                 .build()
-                .subscribeOn(DBFlowSchedulers.getBackgroundScheduler())
+                .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Void>() {
                     @Override
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                                 return true;
                             }
                         }).build()
-                        .subscribeOn(DBFlowSchedulers.getBackgroundScheduler())
+                        .subscribeOn(DBFlowSchedulers.background())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Action1<Void>() {
                             @Override

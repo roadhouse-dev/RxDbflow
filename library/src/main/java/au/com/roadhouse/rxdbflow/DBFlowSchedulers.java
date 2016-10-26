@@ -18,7 +18,7 @@ public class DBFlowSchedulers {
      *
      * @return A DBFlow background scheduler
      */
-    public static Scheduler getBackgroundScheduler(){
+    public static Scheduler background(){
         if(sScheduler == null){
             BlockingQueue<Runnable> threadQueue = new ArrayBlockingQueue<>(200);
             ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 1, 1, TimeUnit.SECONDS, threadQueue);
