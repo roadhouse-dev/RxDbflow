@@ -49,6 +49,11 @@ $ ./gradlew build
 #DBFlow documentation
 For help with DBFlow please take a look at [DBFlow GitHub](https://github.com/Raizlabs/DBFlow)
 
+#Scheduler
+RxDBFlow now comes with it's own scheduler (DBFlowSchedulers.background()), this is a single threaded scheduler that will ensure
+all database operations happen from the same background thread. Using a multi-threaded scheduler like Schedulers.io() can cause the 
+application.
+
 #Sample usage
 
 ##Queries

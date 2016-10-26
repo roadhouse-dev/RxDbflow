@@ -10,6 +10,7 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.List;
 
+import au.com.roadhouse.rxdbflow.DBFlowSchedulers;
 import au.com.roadhouse.rxdbflow.example.model.TestModel;
 import au.com.roadhouse.rxdbflow.sql.language.RxSQLite;
 import au.com.roadhouse.rxdbflow.sql.transaction.RxGenericTransactionBlock;
@@ -32,25 +33,26 @@ public class MainActivity extends AppCompatActivity {
         mDataSubscribers = new CompositeSubscription();
 
         mDatabaseInitSubscription = RxSQLite.select(Method.count())
-                .from(TestModel.class)
-                .asCountObservable()
-                .restartOnChange()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<Long>() {
-                            @Override
-                            public void call(Long aLong) {
-                                if (aLong == 0) {
-                                    Log.e("TEST", "call: populating database");
-                                    populateDatabase();
-                                } else {
-                                    Log.e("TEST", "call: clearing database");
-                                    clearDatabase();
-                                }
-                            }
-                        }
-                );
+                                            .from(TestModel.class)
+                                            .asCountObservable()
+                                            .restartOnChange()
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(
+                                                    new Action1<Long>() {
+                                                        @Override
+                                                        public void call(Long aLong) {
+                                                            if (aLong == 0) {
+                                                                Log.e("TEST", "call: populating database");
+                                                                mDatabaseInitSubscription.unsubscribe();
+                                                                populateDatabase();
+                                                            } else {
+                                                                Log.e("TEST", "call: clearing database");
+                                                                clearDatabase();
+                                                            }
+                                                        }
+                                                    }
+                                            );
     }
 
     private void clearDatabase() {
@@ -63,10 +65,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateList() {
-        //We no longer care about the database initiation subscription as we have a populated
-        //database
-        mDatabaseInitSubscription.unsubscribe();
-
 
         //We are listening for table changes so we add the subscription to the datasubscribers
         //so the subscription can be cleaned up when it's no longer needed
@@ -86,6 +84,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateDatabase() {
+        insertWithModelOperations();
+        insertWithGenericTransactionBlock();
+        insertWithModelOperationTransaction();
+    }
+
+    private void insertWithModelOperations() {
+        TestModel modelOne = new TestModel();
+        modelOne.setFirstName("Bob");
+        modelOne.setLastName("Marley");
+
+        TestModel modelTwo = new TestModel();
+        modelOne.setFirstName("John");
+        modelOne.setLastName("Doe");
+
+        TestModel modelThree = new TestModel();
+        modelOne.setFirstName("Bob");
+        modelOne.setLastName("Don");
+
+        modelOne.insertAsObservable()
+                .subscribeOn(DBFlowSchedulers.background())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void aVoid) {
+                        Log.e("TEST", "Inserting model one");
+                    }
+                });
+
+        modelTwo.insertAsObservable()
+                .subscribeOn(DBFlowSchedulers.background())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void aVoid) {
+                        Log.e("TEST", "Inserting model two");
+                    }
+                });
+
+        modelThree.insertAsObservable()
+                  .subscribeOn(DBFlowSchedulers.background())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(new Action1<Void>() {
+                      @Override
+                      public void call(Void aVoid) {
+                          Log.e("TEST", "Inserting model three");
+                      }
+                  });
+
+
+    }
+
+    private void insertWithModelOperationTransaction() {
         TestModel modelOne = new TestModel();
         modelOne.setFirstName("Bob");
         modelOne.setLastName("Marley");
@@ -104,62 +154,66 @@ public class MainActivity extends AppCompatActivity {
                 .addModel(modelTwo)
                 .addModel(modelThree)
                 .build()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<Void>() {
-            @Override
-            public void call(Void aVoid) {
-                Log.e("TEST", "Finished inserting first models ");
-            }
-        }));
-
-        mDataSubscribers.add(new RxGenericTransactionBlock.Builder(TestModel.class)
-                .addOperation(new RxGenericTransactionBlock.TransactionOperation() {
-                    @Override
-                    public boolean onProcess(DatabaseWrapper databaseWrapper) {
-                        TestModel test = new TestModel();
-                        test.setFirstName("Bob");
-                        test.setLastName("Marley");
-                        test.insert();
-                        return true;
-                    }
-                })
-                .addOperation(new RxGenericTransactionBlock.TransactionOperation() {
-                    @Override
-                    public boolean onProcess(DatabaseWrapper databaseWrapper) {
-                        TestModel test = new TestModel();
-                        test.setFirstName("John");
-                        test.setLastName("Doe");
-                        test.insert();
-
-                        return true;
-                    }
-                })
-                .addOperation(new RxGenericTransactionBlock.TransactionOperation() {
-                    @Override
-                    public boolean onProcess(DatabaseWrapper databaseWrapper) {
-                        TestModel test = new TestModel();
-                        test.setFirstName("Elvis");
-                        test.setLastName("Presely");
-                        test.insert();
-
-                        return true;
-                    }
-                }).build()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {
-                        Log.e("TEST", "Finished inserting second models ");
-                        populateList();
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.e("TEST", "call: Transaction error occurred", throwable);
+                        Log.e("TEST", "Finished inserting modelOperation models ");
                     }
                 }));
+    }
+
+    private void insertWithGenericTransactionBlock() {
+        //GenericTransactionBlock example
+        mDataSubscribers.add(
+                new RxGenericTransactionBlock.Builder(TestModel.class)
+                        .addOperation(new RxGenericTransactionBlock.TransactionOperation() {
+                            @Override
+                            public boolean onProcess(DatabaseWrapper databaseWrapper) {
+                                TestModel test = new TestModel();
+                                test.setFirstName("Bob");
+                                test.setLastName("Marley");
+                                test.insert();
+                                return true;
+                            }
+                        })
+                        .addOperation(new RxGenericTransactionBlock.TransactionOperation() {
+                            @Override
+                            public boolean onProcess(DatabaseWrapper databaseWrapper) {
+                                TestModel test = new TestModel();
+                                test.setFirstName("John");
+                                test.setLastName("Doe");
+                                test.insert();
+
+                                return true;
+                            }
+                        })
+                        .addOperation(new RxGenericTransactionBlock.TransactionOperation() {
+                            @Override
+                            public boolean onProcess(DatabaseWrapper databaseWrapper) {
+                                TestModel test = new TestModel();
+                                test.setFirstName("Elvis");
+                                test.setLastName("Presely");
+                                test.insert();
+
+                                return true;
+                            }
+                        }).build()
+                        .subscribeOn(DBFlowSchedulers.background())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<Void>() {
+                            @Override
+                            public void call(Void aVoid) {
+                                Log.e("TEST", "Finished inserting genericTransactionBlock models ");
+                                populateList();
+                            }
+                        }, new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                Log.e("TEST", "call: Transaction error occurred", throwable);
+                            }
+                        }));
     }
 
     @Override
