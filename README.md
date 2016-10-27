@@ -33,7 +33,7 @@ dependencies {
     apt 'com.github.Raizlabs.DBFlow:dbflow-processor:3.1.1'
     compile 'com.github.Raizlabs.DBFlow:dbflow-core:3.1.1'
     compile 'com.github.Raizlabs.DBFlow:dbflow:3.1.1'
-    compile 'com.github.roadhouse-dev:RxDbflow:1.0.0'
+    compile 'com.github.roadhouse-dev:RxDbflow:1.1.0'
 }
 ```
 
@@ -51,8 +51,7 @@ For help with DBFlow please take a look at [DBFlow GitHub](https://github.com/Ra
 
 #Scheduler
 RxDBFlow now comes with it's own scheduler (DBFlowSchedulers.background()), this is a single threaded scheduler that will ensure
-all database operations happen from the same background thread. Using a multi-threaded scheduler like Schedulers.io() can cause the 
-application.
+all database operations happen from the same background thread. Using a multi-threaded scheduler like Schedulers.io() can cause deadlocks.
 
 #Sample usage
 
