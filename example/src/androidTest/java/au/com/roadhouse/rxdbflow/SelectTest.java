@@ -159,7 +159,7 @@ public class SelectTest {
         mDataSubscribers.add(RxSQLite.select()
                 .from(TestModel.class)
                 .limit(1)
-                .asSingleObservable(false)
+                .asSingleObservable()
                 .subscribe(new Action1<TestModel>() {
                     @Override
                     public void call(TestModel testModels) {
