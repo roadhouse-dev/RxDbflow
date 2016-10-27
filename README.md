@@ -53,7 +53,33 @@ For help with DBFlow please take a look at [DBFlow GitHub](https://github.com/Ra
 RxDBFlow now comes with it's own scheduler (DBFlowSchedulers.background()), this is a single threaded scheduler that will ensure
 all database operations happen from the same background thread. Using a multi-threaded scheduler like Schedulers.io() can cause deadlocks.
 
+
 #Sample usage
+
+##RxBaseModel
+RxBaseModel is an extension of BaseModel and provides RxJava extensions for individual model operations 
+
+```java
+    model.saveAsObservable()
+        .subscribeOn(DBFlowSchedulers.background())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe();
+        
+    model.insertAsObservable()
+        .subscribeOn(DBFlowSchedulers.background())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe();
+        
+    model.deleteAsObservable()
+         .subscribeOn(DBFlowSchedulers.background())
+         .observeOn(AndroidSchedulers.mainThread())
+         .subscribe();
+        
+    model.updateAsObservable()
+         .subscribeOn(DBFlowSchedulers.background())
+         .observeOn(AndroidSchedulers.mainThread())
+         .subscribe();       
+```
 
 ##Queries
 
@@ -105,7 +131,7 @@ Retrieve result as a Cursor
 ```
 Retrieve result as a FlowQueryList
 ```java
-.asQueryListObservable
+.asQueryListObservable()
 ```
 
 
