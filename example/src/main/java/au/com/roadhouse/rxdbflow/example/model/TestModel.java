@@ -11,7 +11,7 @@ import au.com.roadhouse.rxdbflow.structure.RxBaseModel;
 
 @ModelContainer
 @Table(database = ExampleDatabase.class, name = TestModel.NAME, insertConflict = ConflictAction.REPLACE)
-public class TestModel extends RxBaseModel {
+public class TestModel extends RxBaseModel<TestModel> {
 
     public static final String NAME = "test";
 

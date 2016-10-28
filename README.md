@@ -60,6 +60,15 @@ all database operations happen from the same background thread. Using a multi-th
 RxBaseModel is an extension of BaseModel and provides RxJava extensions for individual model operations 
 
 ```java
+
+@Table(database = ExampleDatabase.class, name = TestModel.NAME)
+public class TestModel extends RxBaseModel<TestModel> {
+    ...
+}
+```
+
+
+```java
     model.saveAsObservable()
         .subscribeOn(DBFlowSchedulers.background())
         .observeOn(AndroidSchedulers.mainThread())

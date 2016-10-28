@@ -105,9 +105,9 @@ public class MainActivity extends AppCompatActivity {
         modelOne.insertAsObservable()
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Void>() {
+                .subscribe(new Action1<TestModel>() {
                     @Override
-                    public void call(Void aVoid) {
+                    public void call(TestModel testModel) {
                         Log.e("TEST", "Inserting model one");
                     }
                 });
@@ -115,9 +115,9 @@ public class MainActivity extends AppCompatActivity {
         modelTwo.insertAsObservable()
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Void>() {
+                .subscribe(new Action1<TestModel>() {
                     @Override
-                    public void call(Void aVoid) {
+                    public void call(TestModel testModel) {
                         Log.e("TEST", "Inserting model two");
                     }
                 });
@@ -125,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
         modelThree.insertAsObservable()
                   .subscribeOn(DBFlowSchedulers.background())
                   .observeOn(AndroidSchedulers.mainThread())
-                  .subscribe(new Action1<Void>() {
+                  .subscribe(new Action1<TestModel>() {
                       @Override
-                      public void call(Void aVoid) {
+                      public void call(TestModel testModel) {
                           Log.e("TEST", "Inserting model three");
                       }
                   });
