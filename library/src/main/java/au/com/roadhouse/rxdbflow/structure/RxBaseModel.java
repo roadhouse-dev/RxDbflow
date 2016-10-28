@@ -12,13 +12,13 @@ import rx.functions.Func0;
  * A DBFlow BaseModel implementation which provides observables for saving, updating, inserting, and
  * deleting operations.
  */
-public class RxBaseModel extends BaseModel {
+public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
 
     /**
      * Returns an observable for saving the object in the database
      * @return An observable
      */
-    public Observable<Void> saveAsObservable(){
+    public Observable<M> saveAsObservable(){
         return saveAsObservable(null);
     }
 
@@ -27,10 +27,10 @@ public class RxBaseModel extends BaseModel {
      * @param databaseWrapper The database wrapper for the database holding the table
      * @return An observable
      */
-    public Observable<Void> saveAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<M> saveAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
+        return Observable.defer(new Func0<Observable<M>>() {
             @Override
-            public Observable<Void> call() {
+            public Observable<M> call() {
                 return Observable.just(deferredSave(databaseWrapper));
             }
         });
@@ -40,7 +40,7 @@ public class RxBaseModel extends BaseModel {
      * Returns an observable for inserting the object in the database
      * @return An observable
      */
-    public Observable<Void> insertAsObservable(){
+    public Observable<M> insertAsObservable(){
         return insertAsObservable(null);
     }
 
@@ -49,10 +49,10 @@ public class RxBaseModel extends BaseModel {
      * @param databaseWrapper The database wrapper for the database holding the table
      * @return An observable
      */
-    public Observable<Void> insertAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<M> insertAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
+        return Observable.defer(new Func0<Observable<M>>() {
             @Override
-            public Observable<Void> call() {
+            public Observable<M> call() {
                 return Observable.just(deferredInsert(databaseWrapper));
             }
         });
@@ -62,7 +62,7 @@ public class RxBaseModel extends BaseModel {
      * Returns an observable for deleting the object from the database
      * @return An observable
      */
-    public Observable<Void> deleteAsObservable(){
+    public Observable<M> deleteAsObservable(){
         return deleteAsObservable(null);
     }
 
@@ -71,10 +71,10 @@ public class RxBaseModel extends BaseModel {
      * @param databaseWrapper The database wrapper for the database holding the table
      * @return An observable
      */
-    public Observable<Void> deleteAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<M> deleteAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
+        return Observable.defer(new Func0<Observable<M>>() {
             @Override
-            public Observable<Void> call() {
+            public Observable<M> call() {
                 return Observable.just(deferredDelete(databaseWrapper));
             }
         });
@@ -84,7 +84,7 @@ public class RxBaseModel extends BaseModel {
      * Returns an observable for update the object in the database
      * @return An observable
      */
-    public Observable<Void> updateAsObservable(){
+    public Observable<M> updateAsObservable(){
         return updateAsObservable(null);
     }
 
@@ -93,53 +93,53 @@ public class RxBaseModel extends BaseModel {
      * @param databaseWrapper The database wrapper for the database holding the table
      * @return An observable
      */
-    public Observable<Void> updateAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return Observable.defer(new Func0<Observable<Void>>() {
+    public Observable<M> updateAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
+        return Observable.defer(new Func0<Observable<M>>() {
             @Override
-            public Observable<Void> call() {
+            public Observable<M> call() {
                 return Observable.just(deferredUpdate(databaseWrapper));
             }
         });
     }
 
-    private Void deferredInsert(DatabaseWrapper databaseWrapper){
+    private M deferredInsert(DatabaseWrapper databaseWrapper){
         if(databaseWrapper != null){
             insert(databaseWrapper);
         } else {
             insert();
         }
 
-        return null;
+        return (M) this;
     }
 
-    private Void deferredSave(DatabaseWrapper databaseWrapper){
+    private M deferredSave(DatabaseWrapper databaseWrapper){
         if(databaseWrapper != null){
             insert(databaseWrapper);
         } else {
             insert();
         }
 
-        return null;
+        return (M) this;
     }
 
-    private Void deferredDelete(DatabaseWrapper databaseWrapper){
+    private M deferredDelete(DatabaseWrapper databaseWrapper){
         if(databaseWrapper != null){
             delete(databaseWrapper);
         } else {
             delete();
         }
 
-        return null;
+        return  (M) this;
     }
 
-    private Void deferredUpdate(DatabaseWrapper databaseWrapper){
+    private M deferredUpdate(DatabaseWrapper databaseWrapper){
         if(databaseWrapper != null){
             delete(databaseWrapper);
         } else {
             delete();
         }
 
-        return null;
+        return  (M) this;
     }
 }
 
