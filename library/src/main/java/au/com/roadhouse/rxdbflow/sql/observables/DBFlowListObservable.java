@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.Model;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -30,7 +31,17 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
     }
 
     public Observable<List<TModel>> restartOnChange(){
-        return lift(new DBFlowOnChangeOperator());
+        return lift(new DBFlowOnChangeOperator(mModelClazz, mBaseModelQueriable));
+    }
+
+    /**
+     * Observes changes on the current table, restarting the query on change and emits the updated
+     * query results to any subscribers
+     * @param tableToListen The tables to observe for changes
+     * @return An observable which observes any changes in the specified tables
+     */
+    public Observable<List<TModel>> restartOnChange(Class<TModel>... tableToListen){
+        return lift(new DBFlowOnChangeOperator(mModelClazz, mBaseModelQueriable, tableToListen));
     }
 
     private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<List<AModel>> {
@@ -70,10 +81,27 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
 
     private class DBFlowOnChangeOperator implements Observable.Operator<List<TModel>, List<TModel>> {
 
+        private final Class<TModel> mModelClazz;
+        private final ModelQueriable<TModel> mBaseModelQueriable;
         private FlowContentObserver mFlowContentObserver;
+        private List<Class<TModel>> mSubscribedClasses;
 
-        private DBFlowOnChangeOperator() {
+        public DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable) {
+            mSubscribedClasses = new ArrayList<>();
+            mModelClazz = modelClazz;
+            mBaseModelQueriable = baseModelQueriable;
             mFlowContentObserver = new FlowContentObserver();
+            mSubscribedClasses.add(mModelClazz);
+        }
+
+        public DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable, Class<TModel>[] tableToListen) {
+            mSubscribedClasses = new ArrayList<>();
+            mModelClazz = modelClazz;
+            mBaseModelQueriable = baseModelQueriable;
+            mFlowContentObserver = new FlowContentObserver();
+            for (int i = 0; i < tableToListen.length; i++) {
+                mSubscribedClasses.add(tableToListen[i]);
+            }
         }
 
         @Override
@@ -91,7 +119,9 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
 
                 @Override
                 public void onNext(List<TModel> tModels) {
-                    mFlowContentObserver.registerForContentChanges(FlowManager.getContext(), mModelClazz);
+                    for (int i = 0; i < mSubscribedClasses.size(); i++) {
+                        mFlowContentObserver.registerForContentChanges(FlowManager.getContext(), mSubscribedClasses.get(i));
+                    }
                     mFlowContentObserver.addOnTableChangedListener(
                             new FlowContentObserver.OnTableChangedListener() {
                                 @Override
@@ -100,7 +130,7 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
                                     if (subscriber.isUnsubscribed()) {
                                         mFlowContentObserver.unregisterForContentChanges(FlowManager.getContext());
                                     } else {
-                                        subscriber.onNext(runQuery());
+                                        subscriber.onNext(mBaseModelQueriable.queryList());
                                     }
                                 }
                             });
@@ -110,6 +140,4 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
 
         }
     }
-
-
 }
