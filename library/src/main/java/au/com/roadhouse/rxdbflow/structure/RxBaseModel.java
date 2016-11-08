@@ -113,10 +113,20 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
     }
 
     private M deferredSave(DatabaseWrapper databaseWrapper){
+
         if(databaseWrapper != null){
-            insert(databaseWrapper);
+            if(!exists(databaseWrapper)){
+                insert(databaseWrapper);
+            } else {
+                update(databaseWrapper);
+            }
+            save(databaseWrapper);
         } else {
-            insert();
+            if(!exists()){
+                insert();
+            } else {
+                update();
+            }
         }
 
         return (M) this;
@@ -134,9 +144,9 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
 
     private M deferredUpdate(DatabaseWrapper databaseWrapper){
         if(databaseWrapper != null){
-            delete(databaseWrapper);
+            update(databaseWrapper);
         } else {
-            delete();
+            update();
         }
 
         return  (M) this;
