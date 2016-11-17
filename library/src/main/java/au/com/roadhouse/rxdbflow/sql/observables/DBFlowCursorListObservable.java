@@ -45,6 +45,17 @@ public class DBFlowCursorListObservable<TModel extends Model> extends Observable
     }
 
     /**
+     * Forces onComplete to be called upon returning with a result, therefore automatically
+     * unsubscribing the subscription. This should be used when you're only interested in a
+     * single result i.e. not using {@link #restartOnChange()} or {@link #restartOnChange(Class[])}.
+     * If this is not used, the subscriber will be responsible for unsubscribing
+     * @return An observable which will call onComplete once the result has returned.
+     */
+    public Observable<FlowCursorList<TModel>> completeOnResult(){
+        return lift(new CompleteOnResultOperator<FlowCursorList<TModel>>());
+    }
+
+    /**
      * Observes changes on the current table, restarting the query on change and emits the updated
      * query results to any subscribers
      * @param tableToListen The tables to observe for changes
