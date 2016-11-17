@@ -60,9 +60,24 @@ public class DBFlowCountObservable<TModel extends Model> extends Observable<Long
      * @param tableToListen The tables to observe for changes
      * @return An observable which observes any changes in the specified tables
      */
-    public Observable<Long> restartOnChange(Class<TModel>... tableToListen){
+    @SafeVarargs
+    public final Observable<Long> restartOnChange(Class<TModel>... tableToListen){
         return lift(new DBFlowOnChangeOperator(tableToListen));
     }
+
+
+    /**
+     * Forces onComplete to be called upon returning with a result, therefore automatically
+     * unsubscribing the subscription. This should be used when you're only interested in a
+     * single result i.e. not using {@link #restartOnChange()} or {@link #restartOnChange(Class[])}.
+     * If this is not used, the subscriber will be responsible for unsubscribing
+     * @return An observable which will call onComplete once the result has returned.
+     */
+    public Observable<Long> completeOnResult(){
+        return lift(new CompleteOnResultOperator<Long>());
+    }
+
+
 
     private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<Long> {
 
@@ -121,12 +136,12 @@ public class DBFlowCountObservable<TModel extends Model> extends Observable<Long
             return new Subscriber<Long>() {
                 @Override
                 public void onCompleted() {
-
+                    subscriber.onCompleted();
                 }
 
                 @Override
                 public void onError(Throwable e) {
-
+                    subscriber.onError(e);
                 }
 
                 @Override

@@ -47,6 +47,18 @@ public class DBFlowCustomListObservable<TQueryModel extends BaseQueryModel, TMod
         return lift(new DBFlowOnChangeOperator());
     }
 
+
+    /**
+     * Forces onComplete to be called upon returning with a result, therefore automatically
+     * unsubscribing the subscription. This should be used when you're only interested in a
+     * single result i.e. not using {@link #restartOnChange()} or {@link #restartOnChange(Class[])}.
+     * If this is not used, the subscriber will be responsible for unsubscribing
+     * @return An observable which will call onComplete once the result has returned.
+     */
+    public Observable<List<TQueryModel>> completeOnResult(){
+        return lift(new CompleteOnResultOperator<List<TQueryModel>>());
+    }
+
     /**
      * Observes changes on the current table, restarts the query on change, and emits the updated
      * query results to any subscribers
