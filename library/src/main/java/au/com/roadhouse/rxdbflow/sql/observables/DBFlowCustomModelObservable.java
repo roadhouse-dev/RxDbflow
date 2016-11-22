@@ -51,6 +51,17 @@ public class DBFlowCustomModelObservable<TQueryModel extends BaseQueryModel, TMo
         return lift(new DBFlowOnChangeOperator());
     }
 
+    /**
+     * Forces onComplete to be called upon returning with a result, therefore automatically
+     * unsubscribing the subscription. This should be used when you're only interested in a
+     * single result i.e. not using {@link #restartOnChange(Class[])}.
+     * If this is not used, the subscriber will be responsible for unsubscribing
+     * @return An observable which will call onComplete once the result has returned.
+     */
+    public Observable<TQueryModel> completeOnResult(){
+        return lift(new CompleteOnResultOperator<TQueryModel>());
+    }
+
     private static class OnDBFlowSubscribeWithChanges<AQueryModel extends BaseQueryModel, TModel extends Model> implements OnSubscribe<AQueryModel> {
 
         private final Class<AQueryModel> mClazz;

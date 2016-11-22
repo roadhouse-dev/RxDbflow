@@ -60,6 +60,7 @@ public class DBFlowExecuteObservable<TModel extends Model> extends Observable<Vo
             }
 
             subscriber.onNext(null);
+            subscriber.onCompleted();
         }
     }
 
