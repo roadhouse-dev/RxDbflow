@@ -12,6 +12,7 @@ import java.util.List;
 
 import au.com.roadhouse.rxdbflow.DBFlowSchedulers;
 import au.com.roadhouse.rxdbflow.example.model.TestModel;
+import au.com.roadhouse.rxdbflow.example.model.TestModelTwo;
 import au.com.roadhouse.rxdbflow.sql.language.RxSQLite;
 import au.com.roadhouse.rxdbflow.sql.transaction.RxGenericTransactionBlock;
 import au.com.roadhouse.rxdbflow.sql.transaction.RxModelOperationTransaction;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 RxSQLite.select()
                         .from(TestModel.class)
                         .asListObservable()
-                        .restartOnChange()
+                        .restartOnChange(TestModel.class, TestModelTwo.class)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Action1<List<TestModel>>() {

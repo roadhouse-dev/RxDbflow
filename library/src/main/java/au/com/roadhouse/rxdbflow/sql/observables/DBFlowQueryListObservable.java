@@ -48,6 +48,18 @@ public class DBFlowQueryListObservable<TModel extends Model> extends Observable<
     }
 
     /**
+     * Observes changes on the current table, restarts the query on change, and emits the updated
+     * query results to any subscribers
+     * @param tableToListen The tables to observe for changes
+     * @return An observable which observes any changes in the specified tables
+     */
+    @SafeVarargs
+    public final Observable<FlowQueryList<TModel>> restartOnChange(Class<? extends Model>... tableToListen){
+        Collections.addAll(mSubscribedClasses, tableToListen);
+        return lift(new DBFlowOnChangeOperator());
+    }
+
+    /**
      * Forces onComplete to be called upon returning with a result, therefore automatically
      * unsubscribing the subscription. This should be used when you're only interested in a
      * single result i.e. not using {@link #restartOnChange()} or {@link #restartOnChange(Class[])}.
@@ -56,18 +68,6 @@ public class DBFlowQueryListObservable<TModel extends Model> extends Observable<
      */
     public Observable<FlowQueryList<TModel>> completeOnResult(){
         return lift(new CompleteOnResultOperator<FlowQueryList<TModel>>());
-    }
-
-    /**
-     * Observes changes on the current table, restarts the query on change, and emits the updated
-     * query results to any subscribers
-     * @param tableToListen The tables to observe for changes
-     * @return An observable which observes any changes in the specified tables
-     */
-    @SafeVarargs
-    public final Observable<FlowQueryList<TModel>> restartOnChange(Class<TModel>... tableToListen){
-        Collections.addAll(mSubscribedClasses, tableToListen);
-        return lift(new DBFlowOnChangeOperator());
     }
 
     private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<FlowQueryList<AModel>> {

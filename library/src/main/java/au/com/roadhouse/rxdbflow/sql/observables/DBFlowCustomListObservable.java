@@ -66,7 +66,7 @@ public class DBFlowCustomListObservable<TQueryModel extends BaseQueryModel, TMod
      * @return An observable which observes any changes in the specified tables
      */
     @SafeVarargs
-    public final Observable<List<TQueryModel>> restartOnChange(Class<TModel>... tableToListen){
+    public final Observable<List<TQueryModel>> restartOnChange(Class<? extends Model>... tableToListen){
         Collections.addAll(mSubscribedClasses, tableToListen);
         return lift(new DBFlowOnChangeOperator());
     }

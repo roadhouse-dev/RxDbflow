@@ -61,7 +61,7 @@ public class DBFlowCountObservable<TModel extends Model> extends Observable<Long
      * @return An observable which observes any changes in the specified tables
      */
     @SafeVarargs
-    public final Observable<Long> restartOnChange(Class<TModel>... tableToListen){
+    public final Observable<Long> restartOnChange(Class<? extends Model>... tableToListen){
         return lift(new DBFlowOnChangeOperator(tableToListen));
     }
 
@@ -113,7 +113,7 @@ public class DBFlowCountObservable<TModel extends Model> extends Observable<Long
 
     private class DBFlowOnChangeOperator implements Observable.Operator<Long, Long> {
 
-        private List<Class<TModel>> mSubscribedClasses;
+        private List<Class<? extends Model>> mSubscribedClasses;
         private FlowContentObserver mFlowContentObserver;
 
         private DBFlowOnChangeOperator() {
@@ -122,7 +122,7 @@ public class DBFlowCountObservable<TModel extends Model> extends Observable<Long
             mSubscribedClasses.add(mModelClazz);
         }
 
-        private DBFlowOnChangeOperator(Class<TModel>[] tableToListen) {
+        private DBFlowOnChangeOperator(Class<? extends Model>[] tableToListen) {
             mSubscribedClasses = new ArrayList<>();
             mFlowContentObserver = new FlowContentObserver();
             for (int i = 0; i < tableToListen.length; i++) {

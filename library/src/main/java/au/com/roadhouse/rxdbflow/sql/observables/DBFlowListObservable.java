@@ -40,7 +40,8 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
      * @param tableToListen The tables to observe for changes
      * @return An observable which observes any changes in the specified tables
      */
-    public Observable<List<TModel>> restartOnChange(Class<TModel>... tableToListen){
+    @SafeVarargs
+    public final Observable<List<TModel>> restartOnChange(Class<? extends Model>... tableToListen){
         return lift(new DBFlowOnChangeOperator(mModelClazz, mBaseModelQueriable, tableToListen));
     }
 
@@ -95,7 +96,7 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
         private final Class<TModel> mModelClazz;
         private final ModelQueriable<TModel> mBaseModelQueriable;
         private FlowContentObserver mFlowContentObserver;
-        private List<Class<TModel>> mSubscribedClasses;
+        private List<Class<? extends Model>> mSubscribedClasses;
 
         public DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable) {
             mSubscribedClasses = new ArrayList<>();
@@ -105,7 +106,7 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
             mSubscribedClasses.add(mModelClazz);
         }
 
-        public DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable, Class<TModel>[] tableToListen) {
+        public DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable, Class<? extends Model>[] tableToListen) {
             mSubscribedClasses = new ArrayList<>();
             mModelClazz = modelClazz;
             mBaseModelQueriable = baseModelQueriable;

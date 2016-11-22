@@ -61,7 +61,8 @@ public class DBFlowCursorListObservable<TModel extends Model> extends Observable
      * @param tableToListen The tables to observe for changes
      * @return An observable which observes any changes in the specified tables
      */
-    public Observable<FlowCursorList<TModel>> restartOnChange(Class<TModel>... tableToListen){
+    @SafeVarargs
+    public final Observable<FlowCursorList<TModel>> restartOnChange(Class<? extends Model>... tableToListen){
         return lift(new DBFlowOnChangeOperator(mModelClazz, mBaseModelQueriable, tableToListen));
     }
 
@@ -90,7 +91,7 @@ public class DBFlowCursorListObservable<TModel extends Model> extends Observable
         private final Class<TModel> mModelClazz;
         private final ModelQueriable<TModel> mBaseModelQueriable;
         private FlowContentObserver mFlowContentObserver;
-        private List<Class<TModel>> mSubscribedClasses;
+        private List<Class<? extends Model>> mSubscribedClasses;
 
         public DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable) {
             mSubscribedClasses = new ArrayList<>();
@@ -100,7 +101,7 @@ public class DBFlowCursorListObservable<TModel extends Model> extends Observable
             mSubscribedClasses.add(mModelClazz);
         }
 
-        private DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable, Class<TModel>[] tableToListen) {
+        private DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable, Class<? extends Model>[] tableToListen) {
             mSubscribedClasses = new ArrayList<>();
             mModelClazz = modelClazz;
             mBaseModelQueriable = baseModelQueriable;
