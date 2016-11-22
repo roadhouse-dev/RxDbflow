@@ -3,7 +3,6 @@ package au.com.roadhouse.rxdbflow.sql.observables;
 import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.list.FlowQueryList;
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
 import com.raizlabs.android.dbflow.sql.language.CursorResult;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
@@ -49,6 +48,18 @@ public class DBFlowResultObservable<TModel extends Model> extends Observable<Cur
     }
 
     /**
+     * Observes changes on the current table, restarts the query on change, and emits the updated
+     * query results to any subscribers
+     * @param tableToListen The tables to observe for changes
+     * @return An observable which observes any changes in the specified tables
+     */
+    @SafeVarargs
+    public final Observable<CursorResult<TModel>> restartOnChange(Class<? extends Model>... tableToListen){
+        Collections.addAll(mSubscribedClasses, tableToListen);
+        return lift(new DBFlowOnChangeOperator());
+    }
+
+    /**
      * Forces onComplete to be called upon returning with a result, therefore automatically
      * unsubscribing the subscription. This should be used when you're only interested in a
      * single result i.e. not using {@link #restartOnChange()} or {@link #restartOnChange(Class[])}.
@@ -57,18 +68,6 @@ public class DBFlowResultObservable<TModel extends Model> extends Observable<Cur
      */
     public Observable<CursorResult<TModel>> completeOnResult(){
         return lift(new CompleteOnResultOperator<CursorResult<TModel>>());
-    }
-
-    /**
-     * Observes changes on the current table, restarts the query on change, and emits the updated
-     * query results to any subscribers
-     * @param tableToListen The tables to observe for changes
-     * @return An observable which observes any changes in the specified tables
-     */
-    @SafeVarargs
-    public final Observable<CursorResult<TModel>> restartOnChange(Class<TModel>... tableToListen){
-        Collections.addAll(mSubscribedClasses, tableToListen);
-        return lift(new DBFlowOnChangeOperator());
     }
 
 
