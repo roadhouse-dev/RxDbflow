@@ -44,6 +44,17 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
         return lift(new DBFlowOnChangeOperator(mModelClazz, mBaseModelQueriable, tableToListen));
     }
 
+    /**
+     * Forces onComplete to be called upon returning with a result, therefore automatically
+     * unsubscribing the subscription. This should be used when you're only interested in a
+     * single result i.e. not using {@link #restartOnChange()} or {@link #restartOnChange(Class[])}.
+     * If this is not used, the subscriber will be responsible for unsubscribing
+     * @return An observable which will call onComplete once the result has returned.
+     */
+    public Observable<List<TModel>> completeOnResult(){
+        return lift(new CompleteOnResultOperator<List<TModel>>());
+    }
+
     private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<List<AModel>> {
 
         private final ModelQueriable<AModel> mBaseModelQueriable;

@@ -3,6 +3,7 @@ package au.com.roadhouse.rxdbflow.sql.observables;
 import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.list.FlowQueryList;
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
 import com.raizlabs.android.dbflow.sql.language.CursorResult;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
@@ -45,6 +46,17 @@ public class DBFlowResultObservable<TModel extends Model> extends Observable<Cur
     public Observable<CursorResult<TModel>> restartOnChange(){
         mSubscribedClasses.add(mModelClazz);
         return lift(new DBFlowOnChangeOperator());
+    }
+
+    /**
+     * Forces onComplete to be called upon returning with a result, therefore automatically
+     * unsubscribing the subscription. This should be used when you're only interested in a
+     * single result i.e. not using {@link #restartOnChange()} or {@link #restartOnChange(Class[])}.
+     * If this is not used, the subscriber will be responsible for unsubscribing
+     * @return An observable which will call onComplete once the result has returned.
+     */
+    public Observable<CursorResult<TModel>> completeOnResult(){
+        return lift(new CompleteOnResultOperator<CursorResult<TModel>>());
     }
 
     /**
