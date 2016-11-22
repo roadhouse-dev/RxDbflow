@@ -22,6 +22,18 @@ public class RxWhere<TModel extends Model> extends BaseModelQueriableObservable<
     }
 
     /**
+     * Adds a param to the WHERE clause with the custom {@link SQLCondition}
+     *
+     * @param condition The {@link SQLCondition} to use
+     * @return  An instance of RxWhere
+     */
+    RxWhere<TModel> and(SQLCondition condition){
+        mRealWhere.and(condition);
+
+        return this;
+    }
+
+    /**
      * Constructs a where clause which contains all of the passed in conditions
      *
      * @param conditions The conditions to add to the where clause
