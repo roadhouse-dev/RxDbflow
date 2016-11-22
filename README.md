@@ -120,6 +120,17 @@ RxSQLite.select()
     .subscribe(...)
 ```
 
+###Automatically Unsubscribe after initial results
+
+```java
+//Do not use in conjunction with restartOnChange()
+RxSQLite.select()
+    .from(TableModel.class)
+    .asSingleObservable()
+    .completeOnResult()
+    .subscribe(...)
+```
+
 
 ###Rerun query on specific table changes
 
