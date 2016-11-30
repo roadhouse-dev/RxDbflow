@@ -2,9 +2,13 @@ package au.com.roadhouse.rxdbflow.structure;
 
 import android.support.annotation.Nullable;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
+import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
+import au.com.roadhouse.rxdbflow.RxDbFlow;
 import rx.Observable;
 import rx.functions.Func0;
 
@@ -12,14 +16,17 @@ import rx.functions.Func0;
  * A DBFlow BaseModel implementation which provides observables for saving, updating, inserting, and
  * deleting operations.
  */
+@SuppressWarnings("unchecked")
 public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
+
+    private RxModelAdapter<? extends RxBaseModel> mModelAdapter;
 
     /**
      * Returns an observable for saving the object in the database
      * @return An observable
      */
     public Observable<M> saveAsObservable(){
-        return saveAsObservable(null);
+        return getRxModelAdapter().saveAsObservable(this);
     }
 
     /**
@@ -27,13 +34,9 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
      * @param databaseWrapper The database wrapper for the database holding the table
      * @return An observable
      */
+    @SuppressWarnings("unchecked")
     public Observable<M> saveAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return Observable.defer(new Func0<Observable<M>>() {
-            @Override
-            public Observable<M> call() {
-                return Observable.just(deferredSave(databaseWrapper));
-            }
-        });
+        return getRxModelAdapter().saveAsObservable(this, databaseWrapper);
     }
 
     /**
@@ -41,7 +44,7 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
      * @return An observable
      */
     public Observable<M> insertAsObservable(){
-        return insertAsObservable(null);
+        return getRxModelAdapter().insertAsObservable(this);
     }
 
     /**
@@ -50,12 +53,7 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
      * @return An observable
      */
     public Observable<M> insertAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return Observable.defer(new Func0<Observable<M>>() {
-            @Override
-            public Observable<M> call() {
-                return Observable.just(deferredInsert(databaseWrapper));
-            }
-        });
+        return getRxModelAdapter().insertAsObservable(this, databaseWrapper);
     }
 
     /**
@@ -63,7 +61,7 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
      * @return An observable
      */
     public Observable<M> deleteAsObservable(){
-        return deleteAsObservable(null);
+        return getRxModelAdapter().deleteAsObservable(this);
     }
 
     /**
@@ -72,12 +70,7 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
      * @return An observable
      */
     public Observable<M> deleteAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return Observable.defer(new Func0<Observable<M>>() {
-            @Override
-            public Observable<M> call() {
-                return Observable.just(deferredDelete(databaseWrapper));
-            }
-        });
+        return getRxModelAdapter().deleteAsObservable(this, databaseWrapper);
     }
 
     /**
@@ -85,7 +78,7 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
      * @return An observable
      */
     public Observable<M> updateAsObservable(){
-        return updateAsObservable(null);
+        return getRxModelAdapter().updateAsObservable(this);
     }
 
     /**
@@ -94,62 +87,19 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
      * @return An observable
      */
     public Observable<M> updateAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return Observable.defer(new Func0<Observable<M>>() {
-            @Override
-            public Observable<M> call() {
-                return Observable.just(deferredUpdate(databaseWrapper));
-            }
-        });
+        return getRxModelAdapter().updateAsObservable(this, databaseWrapper);
     }
 
-    private M deferredInsert(DatabaseWrapper databaseWrapper){
-        if(databaseWrapper != null){
-            insert(databaseWrapper);
-        } else {
-            insert();
+    /**
+     * @return The associated {@link RxModelAdapter}. The {@link RxDbFlow}
+     * may throw a {@link InvalidDBConfiguration} for this call if this class
+     * is not associated with a table, so be careful when using this method.
+     */
+    public RxModelAdapter getRxModelAdapter() {
+        if (mModelAdapter == null) {
+            mModelAdapter = RxDbFlow.getModelAdapter(getClass());
         }
-
-        return (M) this;
-    }
-
-    private M deferredSave(DatabaseWrapper databaseWrapper){
-
-        if(databaseWrapper != null){
-            if(!exists(databaseWrapper)){
-                insert(databaseWrapper);
-            } else {
-                update(databaseWrapper);
-            }
-            save(databaseWrapper);
-        } else {
-            if(!exists()){
-                insert();
-            } else {
-                update();
-            }
-        }
-
-        return (M) this;
-    }
-
-    private M deferredDelete(DatabaseWrapper databaseWrapper){
-        if(databaseWrapper != null){
-            delete(databaseWrapper);
-        } else {
-            delete();
-        }
-
-        return  (M) this;
-    }
-
-    private M deferredUpdate(DatabaseWrapper databaseWrapper){
-        if(databaseWrapper != null){
-            update(databaseWrapper);
-        } else {
-            update();
-        }
-
-        return  (M) this;
+        return mModelAdapter;
     }
 }
 

@@ -107,7 +107,7 @@ public class DBFlowCustomModelObservable<TQueryModel extends BaseQueryModel, TMo
                     }
                     mFlowContentObserver.addModelChangeListener(new FlowContentObserver.OnModelStateChangedListener() {
                         @Override
-                        public void onModelStateChanged(@Nullable Class<? extends Model> table, BaseModel.Action action, @NonNull SQLCondition[] primaryKeyValues) {
+                        public void onModelStateChanged(@Nullable Class<?> table, BaseModel.Action action, @NonNull SQLCondition[] primaryKeyValues) {
                             if (subscriber.isUnsubscribed()) {
                                 mFlowContentObserver.unregisterForContentChanges(FlowManager.getContext());
                             } else {
