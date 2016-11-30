@@ -137,8 +137,7 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
                     mFlowContentObserver.addOnTableChangedListener(
                             new FlowContentObserver.OnTableChangedListener() {
                                 @Override
-                                public void onTableChanged(@Nullable Class<? extends Model> tableChanged, BaseModel.Action action) {
-
+                                public void onTableChanged(@Nullable Class<?> tableChanged, BaseModel.Action action) {
                                     if (subscriber.isUnsubscribed()) {
                                         mFlowContentObserver.unregisterForContentChanges(FlowManager.getContext());
                                     } else {

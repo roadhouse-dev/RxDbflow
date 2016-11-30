@@ -3,13 +3,11 @@ package au.com.roadhouse.rxdbflow.example.model;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ConflictAction;
-import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
 import au.com.roadhouse.rxdbflow.structure.RxBaseModel;
 
-@ModelContainer
 @Table(database = ExampleDatabase.class, name = TestModel.NAME, insertConflict = ConflictAction.REPLACE)
 public class TestModel extends RxBaseModel<TestModel> {
 
