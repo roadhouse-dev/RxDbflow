@@ -33,7 +33,7 @@ dependencies {
     apt 'com.github.Raizlabs.DBFlow:dbflow-processor:3.1.1'
     compile 'com.github.Raizlabs.DBFlow:dbflow-core:3.1.1'
     compile 'com.github.Raizlabs.DBFlow:dbflow:3.1.1'
-    compile 'com.github.roadhouse-dev:RxDbflow:1.1.6'
+    compile 'com.github.roadhouse-dev:RxDbflow:<Version>'
 }
 ```
 
