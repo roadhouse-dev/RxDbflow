@@ -88,7 +88,7 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel implements RxM
     }
 
     /**
-     * Returns an observable which will refresh the models data based on the primary key when subscribed.
+     * Returns an observable which will refresh the model's data based on the primary key when subscribed.
      * @return An observable
      */
     public Observable<M> loadAsObservable(){
@@ -96,7 +96,7 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel implements RxM
     }
 
     /**
-     * Returns an observable which will refresh the models data based on the primary key when subscribed.
+     * Returns an observable which will refresh the model's data based on the primary key when subscribed.
      * @param databaseWrapper The database wrapper for the database holding the table
      * @return An observable
      */
