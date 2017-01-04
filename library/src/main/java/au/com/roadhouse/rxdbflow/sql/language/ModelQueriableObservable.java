@@ -4,14 +4,13 @@ import com.raizlabs.android.dbflow.list.FlowCursorList;
 import com.raizlabs.android.dbflow.list.FlowQueryList;
 import com.raizlabs.android.dbflow.sql.language.CursorResult;
 import com.raizlabs.android.dbflow.structure.BaseQueryModel;
-import com.raizlabs.android.dbflow.structure.Model;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.List;
 
 import rx.Observable;
 
-public interface ModelQueriableObservable<TModel extends Model> extends QueriableObservable {
+public interface ModelQueriableObservable<TModel> extends QueriableObservable {
 
     /**
      * Creates an observable that emits a single model from a query. This will be the first record

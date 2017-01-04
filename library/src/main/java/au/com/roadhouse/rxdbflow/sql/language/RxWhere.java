@@ -6,12 +6,11 @@ import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.SQLCondition;
 import com.raizlabs.android.dbflow.sql.language.Where;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
-import com.raizlabs.android.dbflow.structure.Model;
 
 /**
  * Defines the where clause of a SQL query
  */
-public class RxWhere<TModel extends Model> extends BaseModelQueriableObservable<TModel>
+public class RxWhere<TModel> extends BaseModelQueriableObservable<TModel>
         implements Query, RxTransformable<TModel> {
 
     Where<TModel> mRealWhere;

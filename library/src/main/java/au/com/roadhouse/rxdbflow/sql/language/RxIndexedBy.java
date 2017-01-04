@@ -7,12 +7,11 @@ import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.SQLCondition;
 import com.raizlabs.android.dbflow.sql.language.WhereBase;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
-import com.raizlabs.android.dbflow.structure.Model;
 
 /**
  * Constructs an Index By clause for a SQL query
  */
-public class RxIndexedBy <TModel extends Model> implements WhereBase<TModel>, RxTransformable<TModel> {
+public class RxIndexedBy <TModel> implements WhereBase<TModel>, RxTransformable<TModel> {
 
     private IndexedBy<TModel> mRealIndexedBy;
 

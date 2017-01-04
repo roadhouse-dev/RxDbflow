@@ -15,35 +15,35 @@ public class TestModel extends RxBaseModel<TestModel> {
 
     @PrimaryKey(autoincrement = true)
     @Column(name = "id", getterName = "getId", setterName = "setId")
-    private long mId;
+    private long id;
 
     @Column(name = "first_name", getterName = "getFirstName", setterName = "setFirstName")
-    private String mFirstName;
+    private String firstName;
 
     @Column(name = "last_name", getterName = "getLastName", setterName = "setLastName")
-    private String mLastName;
+    private String lastName;
 
     public long getId() {
-        return mId;
+        return id;
     }
 
     public void setId(long id) {
-        mId = id;
+        this.id = id;
     }
 
     public String getFirstName() {
-        return mFirstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        mFirstName = firstName;
+        this.firstName = firstName;
     }
 
     public String getLastName() {
-        return mLastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        mLastName = lastName;
+        this.lastName = lastName;
     }
 }

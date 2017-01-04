@@ -21,7 +21,7 @@ import rx.Subscriber;
 /**
  * Given a RxSQLite query, emits the the first element from the query as a custom model.
  */
-public class DBFlowCustomModelObservable<TQueryModel extends BaseQueryModel, TModel extends Model> extends Observable<TQueryModel> {
+public class DBFlowCustomModelObservable<TQueryModel extends BaseQueryModel, TModel> extends Observable<TQueryModel> {
 
     private final Class<TQueryModel> mModelClazz;
     private final ModelQueriable<TModel> mBaseModelQueriable;
@@ -62,7 +62,7 @@ public class DBFlowCustomModelObservable<TQueryModel extends BaseQueryModel, TMo
         return lift(new CompleteOnResultOperator<TQueryModel>());
     }
 
-    private static class OnDBFlowSubscribeWithChanges<AQueryModel extends BaseQueryModel, TModel extends Model> implements OnSubscribe<AQueryModel> {
+    private static class OnDBFlowSubscribeWithChanges<AQueryModel extends BaseQueryModel, TModel> implements OnSubscribe<AQueryModel> {
 
         private final Class<AQueryModel> mClazz;
         private final ModelQueriable<TModel> mBaseModelQueriable;

@@ -11,7 +11,6 @@ import com.raizlabs.android.dbflow.sql.language.Set;
 import com.raizlabs.android.dbflow.sql.language.Where;
 import com.raizlabs.android.dbflow.sql.language.WhereBase;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
-import com.raizlabs.android.dbflow.structure.Model;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteObservable;
@@ -20,11 +19,11 @@ import rx.Observable;
 /**
  * Provides a set block for a select statement
  */
-public class RxSet<TModel extends Model> implements WhereBase<TModel>, QueriableObservable, RxTransformable<TModel>{
+public class RxSet<TModel> implements WhereBase<TModel>, QueriableObservable, RxTransformable<TModel>{
 
-    Set<TModel> mRealSet;
+    private Set<TModel> mRealSet;
 
-    public RxSet(Set<TModel> realSet) {
+    RxSet(Set<TModel> realSet) {
         mRealSet = realSet;
     }
 

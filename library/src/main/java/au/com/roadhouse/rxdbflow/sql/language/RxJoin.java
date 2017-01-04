@@ -4,14 +4,13 @@ import com.raizlabs.android.dbflow.sql.Query;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.SQLCondition;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
-import com.raizlabs.android.dbflow.structure.Model;
 
 /**
  * Constructs a join clause for a SQL statement
  * @param <TModel> The table model class to join to
  * @param <TFromModel> The table model class being joined to
  */
-public class RxJoin<TModel extends Model, TFromModel extends Model> implements Query {
+public class RxJoin<TModel, TFromModel> implements Query {
 
     private Join<TModel, TFromModel> mRealJoin;
     private RxFrom<TFromModel> mRxFrom;

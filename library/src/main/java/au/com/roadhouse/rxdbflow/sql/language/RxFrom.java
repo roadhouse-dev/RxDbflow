@@ -21,7 +21,7 @@ import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCursorObservable;
 /**
  * Constructs a From clause for a SQL query
  */
-public class RxFrom<TModel extends Model> extends BaseModelQueriableObservable<TModel> implements Query,
+public class RxFrom<TModel> extends BaseModelQueriableObservable<TModel> implements Query,
         WhereBase<TModel>,  RxTransformable<TModel>, ModelQueriableObservable<TModel> {
 
     private From<TModel> mRealFrom;

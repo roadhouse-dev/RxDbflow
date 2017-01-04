@@ -24,7 +24,7 @@ import rx.Subscriber;
  * {@link au.com.roadhouse.rxdbflow.sql.language.RxSQLite#selectCountOf(IProperty[])}
  * @param <TModel> The table/view model in which the count is performed.
  */
-public class DBFlowCountObservable<TModel extends Model> extends Observable<Long> {
+public class DBFlowCountObservable<TModel> extends Observable<Long> {
 
     private final BaseQueriable<TModel> mBaseModelQueriable;
     private final Class<TModel> mModelClazz;
@@ -79,7 +79,7 @@ public class DBFlowCountObservable<TModel extends Model> extends Observable<Long
 
 
 
-    private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<Long> {
+    private static class OnDBFlowSubscribeWithChanges<AModel> implements OnSubscribe<Long> {
 
         private final BaseQueriable<AModel> mBaseModelQueriable;
         private final DatabaseWrapper mDatabaseWrapper;
@@ -113,7 +113,7 @@ public class DBFlowCountObservable<TModel extends Model> extends Observable<Long
 
     private class DBFlowOnChangeOperator implements Observable.Operator<Long, Long> {
 
-        private List<Class<? extends Model>> mSubscribedClasses;
+        private List<Class> mSubscribedClasses;
         private FlowContentObserver mFlowContentObserver;
 
         private DBFlowOnChangeOperator() {

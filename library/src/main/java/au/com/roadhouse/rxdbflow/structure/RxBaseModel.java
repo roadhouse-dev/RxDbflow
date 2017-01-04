@@ -2,22 +2,19 @@ package au.com.roadhouse.rxdbflow.structure;
 
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
-import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import au.com.roadhouse.rxdbflow.RxDbFlow;
 import rx.Observable;
-import rx.functions.Func0;
 
 /**
  * A DBFlow BaseModel implementation which provides observables for saving, updating, inserting, and
  * deleting operations.
  */
 @SuppressWarnings("unchecked")
-public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
+public class RxBaseModel<M extends RxBaseModel> extends BaseModel implements RxModifications<M> {
 
     private RxModelAdapter<? extends RxBaseModel> mModelAdapter;
 
@@ -88,6 +85,23 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel {
      */
     public Observable<M> updateAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
         return getRxModelAdapter().updateAsObservable(this, databaseWrapper);
+    }
+
+    /**
+     * Returns an observable which will refresh the models data based on the primary key when subscribed.
+     * @return An observable
+     */
+    public Observable<M> loadAsObservable(){
+        return getRxModelAdapter().loadAsObservable(this);
+    }
+
+    /**
+     * Returns an observable which will refresh the models data based on the primary key when subscribed.
+     * @param databaseWrapper The database wrapper for the database holding the table
+     * @return An observable
+     */
+    public Observable<M> loadAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
+        return getRxModelAdapter().loadAsObservable(this, databaseWrapper);
     }
 
     /**

@@ -21,17 +21,17 @@ import rx.Subscriber;
  * Given a RxSQLite query, emits the results from the query as a FlowCursorList.
  */
 public class DBFlowCursorObservable extends Observable<Cursor> {
-    private final Class<? extends Model> mModelClazz;
+    private final Class mModelClazz;
     private final Queriable mQueriable;
     private final DatabaseWrapper mDatabaseWrapper;
-    private List<Class<? extends Model>> mSubscribedClasses;
+    private List<Class> mSubscribedClasses;
 
     /**
      * Creates a new observable which runs a query and emits the result as a Cursor
      * @param clazz The table/view model in which the FlowCursorList will contain
      * @param queriable The query to run
      */
-    public DBFlowCursorObservable(Class<? extends  Model> clazz, Queriable queriable, DatabaseWrapper databaseWrapper) {
+    public DBFlowCursorObservable(Class clazz, Queriable queriable, DatabaseWrapper databaseWrapper) {
         super(new OnDBFlowSubscribe(queriable, databaseWrapper));
         mModelClazz = clazz;
         mQueriable = queriable;

@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Creates an insert SQL statement
  */
-public class RxInsert<TModel extends Model> extends BaseQueriableObservable implements Query {
+public class RxInsert<TModel> extends BaseQueriableObservable implements Query {
 
     private final Insert<TModel> mRealInsert;
 
@@ -28,7 +28,7 @@ public class RxInsert<TModel extends Model> extends BaseQueriableObservable impl
         mRealInsert = (Insert<TModel>) getRealQueriable();
     }
 
-    private static <TModel extends Model> Insert<TModel> createInsert(Class<TModel> table) {
+    private static <TModel> Insert<TModel> createInsert(Class<TModel> table) {
         return new Insert<>(table);
     }
 

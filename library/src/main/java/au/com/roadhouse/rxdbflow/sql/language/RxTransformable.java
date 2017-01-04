@@ -4,14 +4,13 @@ import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.SQLCondition;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
-import com.raizlabs.android.dbflow.structure.Model;
 
 /**
  * An interface for all SQL query classes that transform RxSQLite query results
  *
  * @param <T> The table model class that the sqlite query will emit
  */
-public interface RxTransformable<T extends Model> {
+public interface RxTransformable<T> {
 
     /**
      * Constructs a group by clause

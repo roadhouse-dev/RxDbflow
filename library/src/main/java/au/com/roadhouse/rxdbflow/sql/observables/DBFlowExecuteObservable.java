@@ -6,7 +6,6 @@ import com.raizlabs.android.dbflow.sql.SqlUtils;
 import com.raizlabs.android.dbflow.sql.language.BaseQueriable;
 import com.raizlabs.android.dbflow.sql.queriable.Queriable;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.Model;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import rx.Observable;
@@ -16,9 +15,9 @@ import rx.Subscriber;
  * Given an RxSQLite query, executes a statement without a result.
  * @param <TModel> The model representing the table to execute against
  */
-public class DBFlowExecuteObservable<TModel extends Model> extends Observable<Void> {
+public class DBFlowExecuteObservable<TModel> extends Observable<Void> {
 
-    private final Class<? extends Model> mModelClazz;
+    private final Class mModelClazz;
     private final BaseQueriable<TModel> mBaseQueriable;
 
     /**
@@ -27,7 +26,7 @@ public class DBFlowExecuteObservable<TModel extends Model> extends Observable<Vo
      * @param modelQueriable The query to execute
      * @param databaseWrapper The database in which the target table resides
      */
-    public DBFlowExecuteObservable(Class<? extends Model> clazz, BaseQueriable<TModel> modelQueriable, @Nullable DatabaseWrapper databaseWrapper) {
+    public DBFlowExecuteObservable(Class clazz, BaseQueriable<TModel> modelQueriable, @Nullable DatabaseWrapper databaseWrapper) {
         super(new OnDBFlowSubscribe(modelQueriable, databaseWrapper));
         mModelClazz = clazz;
         mBaseQueriable = modelQueriable;

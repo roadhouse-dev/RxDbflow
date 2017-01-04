@@ -6,7 +6,10 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import rx.Observable;
 
-
+/**
+ * Provides a common interface for any
+ * @param <TModel>
+ */
 public interface RxModifications<TModel extends RxBaseModel> {
 
     Observable<TModel> saveAsObservable();

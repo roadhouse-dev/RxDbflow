@@ -19,7 +19,7 @@ import rx.Subscriber;
  * Given a RxSQLite query, emits the results from the query as a FlowCursorList
  * @param <TModel> The table/view model in which the FlowCursorList will contain
  */
-public class DBFlowCursorListObservable<TModel extends Model> extends Observable<FlowCursorList<TModel>> {
+public class DBFlowCursorListObservable<TModel> extends Observable<FlowCursorList<TModel>> {
 
     private final Class<TModel> mModelClazz;
     private final ModelQueriable<TModel> mBaseModelQueriable;
@@ -67,7 +67,7 @@ public class DBFlowCursorListObservable<TModel extends Model> extends Observable
     }
 
 
-    private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<FlowCursorList<AModel>> {
+    private static class OnDBFlowSubscribeWithChanges<AModel> implements OnSubscribe<FlowCursorList<AModel>> {
 
         private final ModelQueriable<AModel> mBaseModelQueriable;
         private final Class<AModel> mClazz;
@@ -91,7 +91,7 @@ public class DBFlowCursorListObservable<TModel extends Model> extends Observable
         private final Class<TModel> mModelClazz;
         private final ModelQueriable<TModel> mBaseModelQueriable;
         private FlowContentObserver mFlowContentObserver;
-        private List<Class<? extends Model>> mSubscribedClasses;
+        private List<Class> mSubscribedClasses;
 
         public DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable) {
             mSubscribedClasses = new ArrayList<>();

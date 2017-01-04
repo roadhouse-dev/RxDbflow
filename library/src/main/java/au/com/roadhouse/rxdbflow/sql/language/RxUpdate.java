@@ -5,12 +5,11 @@ import com.raizlabs.android.dbflow.sql.Query;
 import com.raizlabs.android.dbflow.sql.language.SQLCondition;
 import com.raizlabs.android.dbflow.sql.language.Set;
 import com.raizlabs.android.dbflow.sql.language.Update;
-import com.raizlabs.android.dbflow.structure.Model;
 
 /**
  * Creates an update SQL query
  */
-public class RxUpdate<TModel extends Model> implements Query {
+public class RxUpdate<TModel> implements Query {
 
     private final Update<TModel> mRealUpdate;
 

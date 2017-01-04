@@ -19,11 +19,11 @@ import rx.Subscriber;
 /**
  * Given a RxSQLite query, emits the results from the query as a FlowQueryList of models.
  */
-public class DBFlowQueryListObservable<TModel extends Model> extends Observable<FlowQueryList<TModel>> {
+public class DBFlowQueryListObservable<TModel> extends Observable<FlowQueryList<TModel>> {
 
     private final ModelQueriable<TModel> mBaseModelQueriable;
     private final Class<TModel> mModelClazz;
-    private List<Class<? extends Model>> mSubscribedClasses;
+    private List<Class> mSubscribedClasses;
 
     /**
      * Creates a new observable which runs a query and emits the result as a FlowQueryList
@@ -70,7 +70,7 @@ public class DBFlowQueryListObservable<TModel extends Model> extends Observable<
         return lift(new CompleteOnResultOperator<FlowQueryList<TModel>>());
     }
 
-    private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<FlowQueryList<AModel>> {
+    private static class OnDBFlowSubscribeWithChanges<AModel> implements OnSubscribe<FlowQueryList<AModel>> {
 
         private final ModelQueriable<AModel> mBaseModelQueriable;
 

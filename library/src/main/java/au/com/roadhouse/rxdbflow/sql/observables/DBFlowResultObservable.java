@@ -19,11 +19,11 @@ import rx.Subscriber;
 /**
  * Given a RxSQLite query, emits the results from the query as a CursorResult of models.
  */
-public class DBFlowResultObservable<TModel extends Model> extends Observable<CursorResult<TModel>> {
+public class DBFlowResultObservable<TModel> extends Observable<CursorResult<TModel>> {
 
     private final Class<TModel> mModelClazz;
     private final ModelQueriable<TModel> mBaseModelQueriable;
-    private List<Class<? extends Model>> mSubscribedClasses;
+    private List<Class> mSubscribedClasses;
 
     /**
      * Creates a new observable which runs a query and emits the result as a CursorResult
@@ -71,7 +71,7 @@ public class DBFlowResultObservable<TModel extends Model> extends Observable<Cur
     }
 
 
-    private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<CursorResult<AModel>> {
+    private static class OnDBFlowSubscribeWithChanges<AModel> implements OnSubscribe<CursorResult<AModel>> {
 
         private final ModelQueriable<AModel> mBaseModelQueriable;
 

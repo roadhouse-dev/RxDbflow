@@ -19,7 +19,7 @@ import rx.Subscriber;
 /**
  * Given a RxSQLite query, emits the results from the query as a List of custom models.
  */
-public class DBFlowCustomListObservable<TQueryModel extends BaseQueryModel, TModel extends Model> extends Observable<List<TQueryModel>> {
+public class DBFlowCustomListObservable<TQueryModel extends BaseQueryModel, TModel> extends Observable<List<TQueryModel>> {
 
     private final Class<TQueryModel> mModelClazz;
     private final ModelQueriable<TModel> mBaseModelQueriable;
@@ -71,7 +71,7 @@ public class DBFlowCustomListObservable<TQueryModel extends BaseQueryModel, TMod
         return lift(new DBFlowOnChangeOperator());
     }
 
-    private static class OnDBFlowSubscribeWithChanges<AQueryModel extends BaseQueryModel, TModel extends Model> implements OnSubscribe<List<AQueryModel>> {
+    private static class OnDBFlowSubscribeWithChanges<AQueryModel extends BaseQueryModel, TModel> implements OnSubscribe<List<AQueryModel>> {
 
         private final ModelQueriable<TModel> mBaseModelQueriable;
         private final Class<AQueryModel> mClazz;

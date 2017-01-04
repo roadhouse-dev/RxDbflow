@@ -22,7 +22,7 @@ import au.com.roadhouse.rxdbflow.sql.observables.DBFlowResultObservable;
 import rx.Observable;
 
 
-public class BaseModelQueriableObservable<TModel extends Model> extends BaseQueriableObservable<TModel> implements ModelQueriableObservable<TModel> {
+public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservable<TModel> implements ModelQueriableObservable<TModel> {
 
     private ModelQueriable<TModel> mRealModelQueriable;
 

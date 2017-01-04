@@ -16,7 +16,7 @@ import rx.Observable;
 import rx.Subscriber;
 
 
-public class DBFlowListObservable<TModel extends Model> extends Observable<List<TModel>> {
+public class DBFlowListObservable<TModel> extends Observable<List<TModel>> {
 
     private final Class<TModel> mModelClazz;
     private final ModelQueriable<TModel> mBaseModelQueriable;
@@ -56,7 +56,7 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
         return lift(new CompleteOnResultOperator<List<TModel>>());
     }
 
-    private static class OnDBFlowSubscribeWithChanges<AModel extends Model> implements OnSubscribe<List<AModel>> {
+    private static class OnDBFlowSubscribeWithChanges<AModel> implements OnSubscribe<List<AModel>> {
 
         private final ModelQueriable<AModel> mBaseModelQueriable;
         private final Class<AModel> mClazz;
@@ -96,7 +96,7 @@ public class DBFlowListObservable<TModel extends Model> extends Observable<List<
         private final Class<TModel> mModelClazz;
         private final ModelQueriable<TModel> mBaseModelQueriable;
         private FlowContentObserver mFlowContentObserver;
-        private List<Class<? extends Model>> mSubscribedClasses;
+        private List<Class> mSubscribedClasses;
 
         public DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable) {
             mSubscribedClasses = new ArrayList<>();

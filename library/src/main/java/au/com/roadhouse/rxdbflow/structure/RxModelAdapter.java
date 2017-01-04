@@ -2,7 +2,6 @@ package au.com.roadhouse.rxdbflow.structure;
 
 import android.content.ContentValues;
 import android.support.annotation.IntRange;
-import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.structure.InternalAdapter;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
@@ -19,6 +18,10 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
 
     private ModelAdapter<TModel> mModelAdapter;
 
+    /**
+     * Creates a new RxModelAdapter from an standard ModelAdapter
+     * @param modelAdapter The model adapter to create the RxModelAdapter from
+     */
     public RxModelAdapter(ModelAdapter<TModel> modelAdapter) {
         mModelAdapter = modelAdapter;
     }
@@ -143,6 +146,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
         return mModelAdapter.getAutoIncrementingId(tModel);
     }
 
+    public void load(TModel model) {
+        mModelAdapter.load(model);
+    }
+
+    public void load(TModel model, DatabaseWrapper databaseWrapper) {
+        mModelAdapter.load(model, databaseWrapper);
+    }
+
     @Override
     public boolean cachingEnabled() {
         return mModelAdapter.cachingEnabled();
@@ -253,7 +264,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
         });
     }
 
-    public Observable<TModel> updateAsObservable(final TModel model , final DatabaseWrapper databaseWrapper) {
+    public Observable<TModel> updateAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
         return Observable.defer(new Func0<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
@@ -267,4 +278,35 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
             }
         });
     }
+
+    public Observable<TModel> loadAsObservable(final TModel model) {
+        return Observable.defer(new Func0<Observable<TModel>>() {
+            @Override
+            public Observable<TModel> call() {
+                return Observable.fromCallable(new Callable<TModel>() {
+                    @Override
+                    public TModel call() throws Exception {
+                        load(model);
+                        return model;
+                    }
+                });
+            }
+        });
+    }
+
+    public Observable<TModel> loadAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
+        return Observable.defer(new Func0<Observable<TModel>>() {
+            @Override
+            public Observable<TModel> call() {
+                return Observable.fromCallable(new Callable<TModel>() {
+                    @Override
+                    public TModel call() throws Exception {
+                        load(model, databaseWrapper);
+                        return model;
+                    }
+                });
+            }
+        });
+    }
 }
+
