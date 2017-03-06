@@ -23,7 +23,7 @@ public class DBFlowCustomListObservable<TQueryModel extends BaseQueryModel, TMod
 
     private final Class<TQueryModel> mModelClazz;
     private final ModelQueriable<TModel> mBaseModelQueriable;
-    private List<Class<? extends Model>> mSubscribedClasses;
+    private List<Class> mSubscribedClasses;
 
     /**
      * Creates a new observable which runs a query and emits the result as a CustomList

@@ -51,16 +51,16 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * {@inheritDoc}
      */
     @Override
-    public void save(TModel tModel) {
-        mModelAdapter.save(tModel);
+    public boolean save(TModel tModel) {
+        return mModelAdapter.save(tModel);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void save(TModel tModel, DatabaseWrapper databaseWrapper) {
-        mModelAdapter.save(tModel, databaseWrapper);
+    public boolean save(TModel tModel, DatabaseWrapper databaseWrapper) {
+        return mModelAdapter.save(tModel, databaseWrapper);
     }
 
     /**
@@ -68,7 +68,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      */
     @Override
     public void saveAll(Collection<TModel> tModels) {
-        mModelAdapter.saveAll(tModels);
+         mModelAdapter.saveAll(tModels);
     }
 
     /**
@@ -115,16 +115,16 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * {@inheritDoc}
      */
     @Override
-    public void update(TModel tModel) {
-        mModelAdapter.update(tModel);
+    public boolean update(TModel tModel) {
+        return mModelAdapter.update(tModel);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void update(TModel tModel, DatabaseWrapper databaseWrapper) {
-        mModelAdapter.update(tModel, databaseWrapper);
+    public boolean update(TModel tModel, DatabaseWrapper databaseWrapper) {
+        return mModelAdapter.update(tModel, databaseWrapper);
     }
 
     /**
@@ -147,16 +147,16 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * {@inheritDoc}
      */
     @Override
-    public void delete(TModel tModel) {
-        mModelAdapter.delete(tModel);
+    public boolean delete(TModel tModel) {
+        return mModelAdapter.delete(tModel);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void delete(TModel tModel, DatabaseWrapper databaseWrapper) {
-        mModelAdapter.delete(tModel, databaseWrapper);
+    public boolean delete(TModel tModel, DatabaseWrapper databaseWrapper) {
+        return mModelAdapter.delete(tModel, databaseWrapper);
     }
 
     /**
