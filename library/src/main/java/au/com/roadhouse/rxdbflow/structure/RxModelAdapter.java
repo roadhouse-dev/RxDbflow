@@ -34,7 +34,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @param <TModel> The model type
      * @return A RxModelAdapter instane
      */
-    public static <TModel> RxModelAdapter getModelAdapter(Class<TModel> clazz) {
+    public static <TModel> RxModelAdapter<TModel> getModelAdapter(Class<TModel> clazz) {
         return new RxModelAdapter<>(FlowManager.getModelAdapter(clazz));
     }
 

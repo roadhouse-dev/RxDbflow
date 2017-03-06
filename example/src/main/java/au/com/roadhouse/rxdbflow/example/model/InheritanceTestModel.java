@@ -8,10 +8,10 @@ import com.raizlabs.android.dbflow.annotation.Table;
 
 import au.com.roadhouse.rxdbflow.structure.RxBaseModel;
 
-@Table(database = ExampleDatabase.class, name = TestModelTwo.NAME, insertConflict = ConflictAction.REPLACE)
-public class TestModelTwo extends RxBaseModel<TestModelTwo> {
+@Table(database = ExampleDatabase.class, name = InheritanceTestModel.NAME, insertConflict = ConflictAction.REPLACE)
+public class InheritanceTestModel extends RxBaseModel<InheritanceTestModel> {
 
-    public static final String NAME = "testTwo";
+    public static final String NAME = "test-inheritance";
 
     @PrimaryKey(autoincrement = true)
     @Column(name = "id", getterName = "getId", setterName = "setId")

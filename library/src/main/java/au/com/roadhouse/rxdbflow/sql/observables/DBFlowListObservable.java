@@ -6,7 +6,6 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.Model;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.ArrayList;
@@ -40,8 +39,7 @@ public class DBFlowListObservable<TModel> extends Observable<List<TModel>> {
      * @param tableToListen The tables to observe for changes
      * @return An observable which observes any changes in the specified tables
      */
-    @SafeVarargs
-    public final Observable<List<TModel>> restartOnChange(Class<? extends Model>... tableToListen){
+    public final Observable<List<TModel>> restartOnChange(Class... tableToListen){
         return lift(new DBFlowOnChangeOperator(mModelClazz, mBaseModelQueriable, tableToListen));
     }
 
@@ -106,7 +104,7 @@ public class DBFlowListObservable<TModel> extends Observable<List<TModel>> {
             mSubscribedClasses.add(mModelClazz);
         }
 
-        public DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable, Class<? extends Model>[] tableToListen) {
+        public DBFlowOnChangeOperator(Class<TModel> modelClazz, ModelQueriable<TModel> baseModelQueriable, Class[] tableToListen) {
             mSubscribedClasses = new ArrayList<>();
             mModelClazz = modelClazz;
             mBaseModelQueriable = baseModelQueriable;

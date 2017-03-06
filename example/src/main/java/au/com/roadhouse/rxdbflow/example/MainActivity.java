@@ -11,11 +11,12 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import java.util.List;
 
 import au.com.roadhouse.rxdbflow.DBFlowSchedulers;
+import au.com.roadhouse.rxdbflow.example.model.InheritanceTestModel;
 import au.com.roadhouse.rxdbflow.example.model.TestModel;
-import au.com.roadhouse.rxdbflow.example.model.TestModelTwo;
 import au.com.roadhouse.rxdbflow.sql.language.RxSQLite;
 import au.com.roadhouse.rxdbflow.sql.transaction.RxGenericTransactionBlock;
 import au.com.roadhouse.rxdbflow.sql.transaction.RxModelOperationTransaction;
+import au.com.roadhouse.rxdbflow.structure.RxModelAdapter;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -63,6 +64,13 @@ public class MainActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
+
+        RxSQLite.delete(InheritanceTestModel.class)
+                .asExecuteObservable()
+                .publishTableUpdates()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     private void populateList() {
@@ -73,13 +81,27 @@ public class MainActivity extends AppCompatActivity {
                 RxSQLite.select()
                         .from(TestModel.class)
                         .asListObservable()
-                        .restartOnChange(TestModel.class, TestModelTwo.class)
+                        .restartOnChange(TestModel.class, InheritanceTestModel.class)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Action1<List<TestModel>>() {
                             @Override
                             public void call(List<TestModel> testModels) {
-                                Log.e("TEST", "We have " + testModels.size() + " models ");
+                                Log.e("TEST", "We have " + testModels.size() + " test models ");
+                            }
+                        }));
+
+
+        mDataSubscribers.add(
+                RxSQLite.select()
+                        .from(InheritanceTestModel.class)
+                        .asListObservable()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<List<InheritanceTestModel>>() {
+                            @Override
+                            public void call(List<InheritanceTestModel> testModels) {
+                                Log.e("TEST", "We have " + testModels.size() + " inheritance models ");
                             }
                         }));
     }
@@ -103,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
         modelOne.setFirstName("Bob");
         modelOne.setLastName("Don");
 
-        modelOne.insertAsObservable()
+        RxModelAdapter.getModelAdapter(TestModel.class)
+                .insertAsObservable(modelOne)
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<TestModel>() {
@@ -113,7 +136,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        modelTwo.insertAsObservable()
+
+        RxModelAdapter.getModelAdapter(TestModel.class)
+                .insertAsObservable(modelTwo)
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<TestModel>() {
@@ -123,9 +148,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        modelThree.insertAsObservable()
-                  .subscribeOn(DBFlowSchedulers.background())
-                  .observeOn(AndroidSchedulers.mainThread())
+
+        RxModelAdapter.getModelAdapter(TestModel.class)
+                .insertAsObservable(modelThree)
+                .subscribeOn(DBFlowSchedulers.background())
+                .observeOn(AndroidSchedulers.mainThread())
                   .subscribe(new Action1<TestModel>() {
                       @Override
                       public void call(TestModel testModel) {
@@ -137,23 +164,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void insertWithModelOperationTransaction() {
-        TestModel modelOne = new TestModel();
+        //Inheritance insertions
+        InheritanceTestModel modelOne = new InheritanceTestModel();
         modelOne.setFirstName("Bob");
         modelOne.setLastName("Marley");
 
-        TestModel modelTwo = new TestModel();
+        InheritanceTestModel modelTwo = new InheritanceTestModel();
         modelOne.setFirstName("John");
         modelOne.setLastName("Doe");
 
-        TestModel modelThree = new TestModel();
+        InheritanceTestModel modelThree = new InheritanceTestModel();
         modelOne.setFirstName("Bob");
         modelOne.setLastName("Don");
 
-        mDataSubscribers.add(new RxModelOperationTransaction.Builder(TestModel.class)
+        mDataSubscribers.add(new RxModelOperationTransaction.Builder(InheritanceTestModel.class)
                 .setDefaultOperation(RxModelOperationTransaction.MODEL_OPERATION_INSERT)
                 .addModel(modelOne)
                 .addModel(modelTwo)
                 .addModel(modelThree)
+                .build()
+                .subscribeOn(DBFlowSchedulers.background())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void aVoid) {
+                        Log.e("TEST", "Finished inserting modelOperation models ");
+                    }
+                }));
+
+        TestModel testModelOne = new TestModel();
+        testModelOne.setFirstName("Bob");
+        testModelOne.setLastName("Marley");
+
+        TestModel testModelTwo = new TestModel();
+        testModelOne.setFirstName("John");
+        testModelOne.setLastName("Doe");
+
+        TestModel testModelThree = new TestModel();
+        testModelOne.setFirstName("Bob");
+        testModelOne.setLastName("Don");
+
+        mDataSubscribers.add(new RxModelOperationTransaction.Builder(InheritanceTestModel.class)
+                .setDefaultOperation(RxModelOperationTransaction.MODEL_OPERATION_INSERT)
+                .addModel(testModelOne)
+                .addModel(testModelTwo)
+                .addModel(testModelThree)
                 .build()
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -168,11 +223,11 @@ public class MainActivity extends AppCompatActivity {
     private void insertWithGenericTransactionBlock() {
         //GenericTransactionBlock example
         mDataSubscribers.add(
-                new RxGenericTransactionBlock.Builder(TestModel.class)
+                new RxGenericTransactionBlock.Builder(InheritanceTestModel.class)
                         .addOperation(new RxGenericTransactionBlock.TransactionOperation() {
                             @Override
                             public boolean onProcess(DatabaseWrapper databaseWrapper) {
-                                TestModel test = new TestModel();
+                                InheritanceTestModel test = new InheritanceTestModel();
                                 test.setFirstName("Bob");
                                 test.setLastName("Marley");
                                 test.insert();
@@ -182,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                         .addOperation(new RxGenericTransactionBlock.TransactionOperation() {
                             @Override
                             public boolean onProcess(DatabaseWrapper databaseWrapper) {
-                                TestModel test = new TestModel();
+                                InheritanceTestModel test = new InheritanceTestModel();
                                 test.setFirstName("John");
                                 test.setLastName("Doe");
                                 test.insert();
@@ -193,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                         .addOperation(new RxGenericTransactionBlock.TransactionOperation() {
                             @Override
                             public boolean onProcess(DatabaseWrapper databaseWrapper) {
-                                TestModel test = new TestModel();
+                                InheritanceTestModel test = new InheritanceTestModel();
                                 test.setFirstName("Elvis");
                                 test.setLastName("Presely");
                                 test.insert();
@@ -222,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
         //Clean up all data subscribes
         mDataSubscribers.unsubscribe();
         SQLite.delete().from(TestModel.class).execute();
+        SQLite.delete().from(InheritanceTestModel.class).execute();
         super.onDestroy();
     }
 }

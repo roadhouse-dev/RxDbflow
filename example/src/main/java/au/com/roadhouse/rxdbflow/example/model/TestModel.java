@@ -6,10 +6,8 @@ import com.raizlabs.android.dbflow.annotation.ConflictAction;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
-import au.com.roadhouse.rxdbflow.structure.RxBaseModel;
-
 @Table(database = ExampleDatabase.class, name = TestModel.NAME, insertConflict = ConflictAction.REPLACE)
-public class TestModel extends RxBaseModel<TestModel> {
+public class TestModel {
 
     public static final String NAME = "test";
 

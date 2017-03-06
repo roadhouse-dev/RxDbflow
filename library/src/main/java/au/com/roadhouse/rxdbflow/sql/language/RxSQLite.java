@@ -70,7 +70,7 @@ public class RxSQLite {
      * @return A {@link From} with specified DELETE on table.
      */
     @SuppressWarnings("unchecked")
-    public static <TModel extends Model> RxFrom<TModel> delete(Class<TModel> table) {
+    public static <TModel> RxFrom<TModel> delete(Class<TModel> table) {
         return delete().from(table);
     }
 

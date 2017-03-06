@@ -12,6 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.roadhouse.rxdbflow.structure.RxBaseModel;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -39,27 +40,29 @@ public class RxModelOperationTransaction extends Observable<Void> {
 
     private RxModelOperationTransaction(Builder builder) {
         //noinspection unchecked
-        super(new OnTransactionSubscribe(builder.mModelList, builder.mOperationList, builder.mDatabaseWrapper, builder.mCanBatchTransaction));
+        super(new OnTransactionSubscribe(builder.mModelList, builder.mOperationList, builder.mDatabaseWrapper, builder.mCanBatchTransaction, builder.mMustUseAdapters));
     }
 
     private static class OnTransactionSubscribe implements OnSubscribe<Void> {
 
-        private final List<Model> mModelList;
+        private final List<Object> mModelList;
         private final List<Integer> mOperationList;
         private final DatabaseWrapper mDatabaseWrapper;
         private final boolean mCanBatchTransaction;
+        private boolean mMustUserAdapter;
 
-        public OnTransactionSubscribe(List<Model> modelList, List<Integer> operationList, DatabaseWrapper databaseWrapper, boolean canBatchTransaction) {
+        private OnTransactionSubscribe(List<Object> modelList, List<Integer> operationList, DatabaseWrapper databaseWrapper, boolean canBatchTransaction, boolean mustUseAdapter) {
             mModelList = modelList;
             mOperationList = operationList;
             mDatabaseWrapper = databaseWrapper;
             mCanBatchTransaction = canBatchTransaction;
+            mMustUserAdapter = mustUseAdapter;
         }
 
         @Override
         public void call(Subscriber<? super Void> subscriber) {
 
-            if(mOperationList.size() != mModelList.size()){
+            if (mOperationList.size() != mModelList.size()) {
                 subscriber.onError(new IllegalStateException("model list and operation list must be of the same size"));
                 return;
             }
@@ -73,6 +76,8 @@ public class RxModelOperationTransaction extends Observable<Void> {
                 } else if (mCanBatchTransaction) { //All operations are the same, and all Model types are the same
                     @ModelOperation int batchOperation = mOperationList.get(0);
                     performBatchOperation(batchOperation);
+                } else if (mMustUserAdapter) {
+                    performIndividualAdapterOperations();
                 } else {
                     performIndividualOperations();
                 }
@@ -90,7 +95,7 @@ public class RxModelOperationTransaction extends Observable<Void> {
         private void performIndividualOperations() {
             for (int i = 0; i < mModelList.size(); i++) {
                 @ModelOperation int operation = mOperationList.get(i);
-                Model model = mModelList.get(i);
+                Model model = (Model) mModelList.get(i);
 
                 if (operation == MODEL_OPERATION_SAVE) {
                     model.save();
@@ -105,14 +110,29 @@ public class RxModelOperationTransaction extends Observable<Void> {
         }
 
         @SuppressWarnings("unchecked")
+        private void performIndividualAdapterOperations() {
+            for (int i = 0; i < mModelList.size(); i++) {
+                @ModelOperation int operation = mOperationList.get(i);
+                Object model = mModelList.get(i);
+                ModelAdapter modelAdapter = FlowManager.getModelAdapter(model.getClass());
+
+                if (operation == MODEL_OPERATION_SAVE) {
+                    modelAdapter.save(model);
+                } else if (operation == MODEL_OPERATION_DELETE) {
+                    modelAdapter.delete(model);
+                } else if (operation == MODEL_OPERATION_INSERT) {
+                    modelAdapter.insert(model);
+                } else if (operation == MODEL_OPERATION_UPDATE) {
+                    modelAdapter.update(model);
+                }
+            }
+        }
+
+        @SuppressWarnings("unchecked")
         private void performBatchOperation(@ModelOperation int batchOperation) {
             ModelAdapter adapter = FlowManager.getModelAdapter(mModelList.get(0).getClass());
             if (batchOperation == MODEL_OPERATION_SAVE) {
                 adapter.saveAll(mModelList);
-            } else if (batchOperation == MODEL_OPERATION_DELETE) {
-                for (int i = 0; i < mModelList.size(); i++) {
-                    mModelList.get(i).delete();
-                }
             } else if (batchOperation == MODEL_OPERATION_INSERT) {
                 adapter.insertAll(mModelList);
             } else if (batchOperation == MODEL_OPERATION_UPDATE) {
@@ -126,15 +146,17 @@ public class RxModelOperationTransaction extends Observable<Void> {
      */
     public static class Builder {
         private final DatabaseWrapper mDatabaseWrapper;
-        private List<Model> mModelList;
+        private List<Object> mModelList;
         private List<Integer> mOperationList;
         @ModelOperation
         private int mDefaultOperation = MODEL_OPERATION_UNSET;
         //If all models and operations are the same we can optimise for speed
         private boolean mCanBatchTransaction;
+        private boolean mMustUseAdapters;
 
         /**
          * Creates a new builder with a specific database wrapper.
+         *
          * @param databaseWrapper The database wrapper to run the transaction against
          */
         public Builder(DatabaseWrapper databaseWrapper) {
@@ -147,6 +169,7 @@ public class RxModelOperationTransaction extends Observable<Void> {
          * Creates a new builder, using a Model class to derive the target database. The class passed
          * to the parameter does not restrict the tables on which the database operations are performed.
          * As long as the operations run on a single database.
+         *
          * @param clazz The model class used to derive the target database.
          */
         public Builder(Class<? extends Model> clazz) {
@@ -155,10 +178,11 @@ public class RxModelOperationTransaction extends Observable<Void> {
 
         /**
          * Sets a default operation, this is useful when adding a list of models to the builder.
+         *
          * @param modelOperation The model operation to use when no model operation is specified
          * @return An instance of the current builder.
          */
-        public Builder setDefaultOperation(@ModelOperation int modelOperation){
+        public Builder setDefaultOperation(@ModelOperation int modelOperation) {
             mDefaultOperation = modelOperation;
 
             return this;
@@ -167,18 +191,28 @@ public class RxModelOperationTransaction extends Observable<Void> {
         /**
          * Adds a model and it's associated operation to be performed within the transaction
          * block
-         * @param model The model to perform the transaction on
+         *
+         * @param model          The model to perform the transaction on
          * @param modelOperation The operation to be performed.
          * @return An instance of the current builder.
          */
-        public Builder addModel(Model model, @ModelOperation int modelOperation) {
+        public Builder addModel(Object model, @ModelOperation int modelOperation) {
             if (mModelList.size() == 0) {
                 mCanBatchTransaction = true;
-            } else if (mCanBatchTransaction) {
-                //noinspection WrongConstant
-                mCanBatchTransaction =
-                        (mModelList.get(0).getClass() == model.getClass()) &&
-                                mOperationList.get(0) == modelOperation;
+                mMustUseAdapters = false;
+            } else {
+
+                if (!mMustUseAdapters) {
+                    mMustUseAdapters = !(model instanceof RxBaseModel);
+                }
+
+                if (mCanBatchTransaction) {
+                    //noinspection WrongConstant
+                    mCanBatchTransaction =
+                            (mModelList.get(0).getClass() == model.getClass()) &&
+                                    mOperationList.get(0) == modelOperation &&
+                                    modelOperation != MODEL_OPERATION_DELETE;
+                }
             }
 
             mModelList.add(model);
@@ -190,11 +224,12 @@ public class RxModelOperationTransaction extends Observable<Void> {
          * Adds a model for which the default operation will be performed within the transaction
          * block.
          * <p><b>Please Note: </b> The default operation must be set before calling this</p>
+         *
          * @param model The model to perform the default operation on.
          * @return An instance of the current builder.
          */
-        public Builder addModel(Model model){
-            if(mDefaultOperation == MODEL_OPERATION_UNSET){
+        public Builder addModel(Object model) {
+            if (mDefaultOperation == MODEL_OPERATION_UNSET) {
                 throw new IllegalStateException("No default operation set");
             }
             addModel(model, mDefaultOperation);
@@ -205,11 +240,12 @@ public class RxModelOperationTransaction extends Observable<Void> {
         /**
          * Adds a list of models, with a single operation to be performed on each model within the
          * transaction block
-         * @param modelList A list of models
+         *
+         * @param modelList      A list of models
          * @param modelOperation The operation to be performed on each model
          * @return An instance of the current builder.
          */
-        public Builder addAll(List<Model> modelList, @ModelOperation int modelOperation) {
+        public Builder addAll(List<Object> modelList, @ModelOperation int modelOperation) {
             for (int i = 0; i < modelList.size(); i++) {
                 addModel(modelList.get(i), modelOperation);
             }
@@ -221,11 +257,12 @@ public class RxModelOperationTransaction extends Observable<Void> {
          * Adds a list of models, with a paired list of operations. Each model within the list will have
          * have the operation at the same index applied to it, as such both lists must have the same number
          * of elements.
-         * @param modelList A list of models
+         *
+         * @param modelList          A list of models
          * @param modelOperationList A list of paired operations
          * @return An instance of the current builder.
          */
-        public Builder addAll(List<Model> modelList, List<Integer> modelOperationList) {
+        public Builder addAll(List<Object> modelList, List<Integer> modelOperationList) {
             if (modelList.size() != modelOperationList.size()) {
                 throw new IllegalArgumentException("model list and operation list must be of the same size");
             }
@@ -239,10 +276,11 @@ public class RxModelOperationTransaction extends Observable<Void> {
         /**
          * Adds a list of models which will have the default operation performed on them.
          * * <p><b>Please Note: </b> The default operation must be set before calling this</p>
+         *
          * @param modelList A list of models to be effected by the default operation
          * @return An instance of the current builder.
          */
-        public Builder addAll(List<Model> modelList){
+        public Builder addAll(List<Object> modelList) {
             addAll(modelList, mDefaultOperation);
 
             return this;
@@ -252,6 +290,7 @@ public class RxModelOperationTransaction extends Observable<Void> {
         /**
          * Builds a new ModelOperationTransaction observable which will run all database operations within
          * a single transaction once it's subscribed to.
+         *
          * @return A new GenericTransactionBlock containing all database operations
          */
         public RxModelOperationTransaction build() {
