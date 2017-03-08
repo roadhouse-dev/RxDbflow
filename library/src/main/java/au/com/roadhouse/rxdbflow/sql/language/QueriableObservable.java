@@ -6,6 +6,7 @@ import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteObservable;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowObservable;
 import io.reactivex.Observable;
 
 public interface QueriableObservable {
@@ -16,7 +17,7 @@ public interface QueriableObservable {
      *
      * @return An observable that emits a long result
      */
-    Observable<Long> asCountObservable();
+    DBFlowObservable<Long> asCountObservable();
 
     /**
      * Creates an observable that emits a long value. This should be paired with {@link RxSQLite#selectCountOf(IProperty[])}
@@ -43,11 +44,11 @@ public interface QueriableObservable {
      * @param databaseWrapper The database wrapper to use for the query
      * @return An observable that executes a SQL statement
      */
-    Observable<Void> asExecuteObservable(DatabaseWrapper databaseWrapper);
+    DBFlowExecuteObservable asExecuteObservable(DatabaseWrapper databaseWrapper);
 
     /**
      * Creates an observable that emits a cursor containing the results of the query
      * @return An observable that emits a cursor
      */
-    Observable<Cursor> asQueryObservable();
+    DBFlowObservable<Cursor> asQueryObservable();
 }

@@ -2,6 +2,10 @@ package au.com.roadhouse.rxdbflow.sql.observables.operators;
 
 import android.support.annotation.Nullable;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import java.util.Arrays;
 import java.util.List;
 

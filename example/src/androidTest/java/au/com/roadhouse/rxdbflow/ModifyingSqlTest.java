@@ -11,12 +11,12 @@ import org.junit.runner.RunWith;
 import au.com.roadhouse.rxdbflow.example.model.TestModel;
 import au.com.roadhouse.rxdbflow.example.model.TestModel_Table;
 import au.com.roadhouse.rxdbflow.sql.language.RxSQLite;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+
 
 @RunWith(AndroidJUnit4.class)
 public class ModifyingSqlTest {
-    private CompositeSubscription mDataSubscribers;
+    private CompositeDisposable mDataSubscribers;
 
     private boolean mIsRunningASyncTask = false;
     private boolean mWasATaskSyncSuccessful = false;

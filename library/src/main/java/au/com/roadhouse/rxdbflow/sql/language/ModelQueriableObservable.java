@@ -8,6 +8,7 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.List;
 
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowObservable;
 import io.reactivex.Observable;
 
 
@@ -18,7 +19,7 @@ public interface ModelQueriableObservable<TModel> extends QueriableObservable {
      * returned by the query.
      * @return An observable that emits a single model
      */
-    Observable<TModel> asSingleObservable();
+    DBFlowObservable<TModel> asSingleObservable();
 
     /**
      * Creates an observable that emits a single model from a query. This will be the first record
@@ -26,13 +27,13 @@ public interface ModelQueriableObservable<TModel> extends QueriableObservable {
      * @param databaseWrapper The database wrapper from which to run the query
      * @return An observable that emits a single model
      */
-    Observable<TModel> asSingleObservable(DatabaseWrapper databaseWrapper);
+    DBFlowObservable<TModel> asSingleObservable(DatabaseWrapper databaseWrapper);
 
     /**
      * Creates an observable that emits a list of models from a query.
      * @return An observable that emits a list of model
      */
-    Observable<List<TModel>> asListObservable();
+    DBFlowObservable<List<TModel>> asListObservable();
 
     /**
      * Creates an observable that emits a list of models from a query.
@@ -40,28 +41,28 @@ public interface ModelQueriableObservable<TModel> extends QueriableObservable {
      * @param databaseWrapper The database wrapper from which to run the query
      * @return An observable that emits a list of model
      */
-    Observable<List<TModel>> asListObservable(DatabaseWrapper databaseWrapper);
+    DBFlowObservable<List<TModel>> asListObservable(DatabaseWrapper databaseWrapper);
 
     /**
      * Creates an observable that emits the results of a query as a CursorResult.
      *
      * @return An observable that emits a CursorResult
      */
-    Observable<CursorResult<TModel>> asResultsObservable();
+    DBFlowObservable<CursorResult<TModel>> asResultsObservable();
 
     /**
      * Creates an observable that emits the results of a query as a FlowQueryList.
      *
      * @return An observable that emits a FlowQueryList
      */
-    Observable<FlowQueryList<TModel>> asQueryListObservable();
+    DBFlowObservable<FlowQueryList<TModel>> asQueryListObservable();
 
     /**
      * Creates an observable that emits the results of a query as a FlowCursorList.
      *
      * @return An observable that emits a FlowCursorList
      */
-    Observable<FlowCursorList<TModel>> asCursorListObservable();
+    DBFlowObservable<FlowCursorList<TModel>> asCursorListObservable();
 
     /**
      * Creates an observable that emits a single custom QueryModel class. This will be the first record

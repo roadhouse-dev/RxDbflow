@@ -10,51 +10,45 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscriber;
+import au.com.roadhouse.rxdbflow.sql.language.NullValue;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+
 
 /**
  * <p>Provides a transaction block that runs a series of database operations on a single database within
  * a single transaction. There is no limitation on what type of operations, that can run within a single transaction.</p>
  * <p> Creation of a ModelOperationTransaction is via the use of the inner builder. </p>
  */
-public class RxGenericTransactionBlock extends Observable<Void> {
+public class RxGenericTransactionBlock extends Observable<NullValue> {
+
+    private final List<TransactionOperation> mTransactionProcessList;
+    private final DatabaseWrapper mDatabaseWrapper;
 
     private RxGenericTransactionBlock(Builder builder) {
-        super(new OnTransactionSubscribe<Void>(builder.mTransactionProcessList, builder.mDatabaseWrapper));
+        mTransactionProcessList = builder.mTransactionProcessList;
+        mDatabaseWrapper = builder.mDatabaseWrapper;
     }
 
-    private static class OnTransactionSubscribe<T> implements OnSubscribe<Void> {
+    @Override
+    protected void subscribeActual(Observer<? super NullValue> observer) {
+        try {
+            mDatabaseWrapper.beginTransaction();
 
-        private final List<TransactionOperation> mTransactionProcessList;
-        private final DatabaseWrapper mDatabaseWrapper;
-
-        private OnTransactionSubscribe(List<TransactionOperation> transactionProcessList, DatabaseWrapper databaseWrapper) {
-            mTransactionProcessList = transactionProcessList;
-            mDatabaseWrapper = databaseWrapper;
-        }
-
-        @Override
-        public void call(Subscriber<? super Void> subscriber) {
-
-            try {
-                mDatabaseWrapper.beginTransaction();
-
-                for (int i = 0; i < mTransactionProcessList.size(); i++) {
-                    if(!mTransactionProcessList.get(i).onProcess(mDatabaseWrapper)){
-                        throw new SQLiteException("A transaction process item failed");
-                    }
+            for (int i = 0; i < mTransactionProcessList.size(); i++) {
+                if(!mTransactionProcessList.get(i).onProcess(mDatabaseWrapper)){
+                    throw new SQLiteException("A transaction process item failed");
                 }
-                subscriber.onNext(null);
-                subscriber.onCompleted();
-
-
-                mDatabaseWrapper.setTransactionSuccessful();
-            } catch (Exception e){
-                subscriber.onError(e);
-            } finally{
-                mDatabaseWrapper.endTransaction();
             }
+            observer.onNext(new NullValue());
+            observer.onComplete();
+
+
+            mDatabaseWrapper.setTransactionSuccessful();
+        } catch (Exception e){
+            observer.onError(e);
+        } finally{
+            mDatabaseWrapper.endTransaction();
         }
     }
 

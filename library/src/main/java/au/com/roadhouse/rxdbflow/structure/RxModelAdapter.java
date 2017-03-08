@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 
 
 public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
@@ -261,7 +262,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @return An observable
      */
     public Observable<TModel> saveAsObservable(final TModel model) {
-        return Observable.defer(new Func0<Observable<TModel>>() {
+        return Observable.defer(new Callable<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
                 return Observable.fromCallable(new Callable<TModel>() {
@@ -280,7 +281,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @return An observable
      */
     public Observable<TModel> saveAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
-        return Observable.defer(new Func0<Observable<TModel>>() {
+        return Observable.defer(new Callable<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
                 return Observable.fromCallable(new Callable<TModel>() {
@@ -299,7 +300,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @return An observable
      */
     public Observable<TModel> insertAsObservable(final TModel model) {
-        return Observable.defer(new Func0<Observable<TModel>>() {
+        return Observable.defer(new Callable<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
                 return Observable.fromCallable(new Callable<TModel>() {
@@ -318,7 +319,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @return An observable
      */
     public Observable<TModel> insertAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
-        return Observable.defer(new Func0<Observable<TModel>>() {
+        return Observable.defer(new Callable<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
                 return Observable.fromCallable(new Callable<TModel>() {
@@ -337,7 +338,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @return An observable
      */
     public Observable<TModel> deleteAsObservable(final TModel model) {
-        return Observable.defer(new Func0<Observable<TModel>>() {
+        return Observable.defer(new Callable<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
                 return Observable.fromCallable(new Callable<TModel>() {
@@ -356,7 +357,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @return An observable
      */
     public Observable<TModel> deleteAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
-        return Observable.defer(new Func0<Observable<TModel>>() {
+        return Observable.defer(new Callable<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
                 return Observable.fromCallable(new Callable<TModel>() {
@@ -375,7 +376,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @return An observable
      */
     public Observable<TModel> updateAsObservable(final TModel model) {
-        return Observable.defer(new Func0<Observable<TModel>>() {
+        return Observable.defer(new Callable<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
                 return Observable.fromCallable(new Callable<TModel>() {
@@ -394,7 +395,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @return An observable
      */
     public Observable<TModel> updateAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
-        return Observable.defer(new Func0<Observable<TModel>>() {
+        return Observable.defer(new Callable<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
                 return Observable.fromCallable(new Callable<TModel>() {
@@ -413,7 +414,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @return An observable
      */
     public Observable<TModel> loadAsObservable(final TModel model) {
-        return Observable.defer(new Func0<Observable<TModel>>() {
+        return Observable.defer(new Callable<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
                 return Observable.fromCallable(new Callable<TModel>() {
@@ -432,7 +433,7 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
      * @return An observable
      */
     public Observable<TModel> loadAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
-        return Observable.defer(new Func0<Observable<TModel>>() {
+        return Observable.defer(new Callable<Observable<TModel>>() {
             @Override
             public Observable<TModel> call() {
                 return Observable.fromCallable(new Callable<TModel>() {

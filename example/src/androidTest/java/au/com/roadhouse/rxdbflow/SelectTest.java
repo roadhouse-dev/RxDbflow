@@ -4,12 +4,12 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.runner.RunWith;
 
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
 
 @RunWith(AndroidJUnit4.class)
 public class SelectTest {
 
-    private CompositeSubscription mDataSubscribers;
+    private CompositeDisposable mDataSubscribers;
 
     private boolean mIsRunningASyncTask = false;
     private boolean mWasATaskSyncSuccessful = false;

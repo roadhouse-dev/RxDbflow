@@ -13,26 +13,27 @@ import java.util.List;
 import au.com.roadhouse.rxdbflow.DBFlowSchedulers;
 import au.com.roadhouse.rxdbflow.example.model.InheritanceTestModel;
 import au.com.roadhouse.rxdbflow.example.model.TestModel;
+import au.com.roadhouse.rxdbflow.sql.language.NullValue;
 import au.com.roadhouse.rxdbflow.sql.language.RxSQLite;
 import au.com.roadhouse.rxdbflow.sql.transaction.RxGenericTransactionBlock;
 import au.com.roadhouse.rxdbflow.sql.transaction.RxModelOperationTransaction;
 import au.com.roadhouse.rxdbflow.structure.RxModelAdapter;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CompositeSubscription mDataSubscribers;
-    private Subscription mDatabaseInitSubscription;
+    private CompositeDisposable mDataSubscribers;
+    private Disposable mDatabaseInitSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mDataSubscribers = new CompositeSubscription();
+        mDataSubscribers = new CompositeDisposable();
 
         mDatabaseInitSubscription = RxSQLite.select(Method.count())
                                             .from(TestModel.class)
@@ -41,12 +42,13 @@ public class MainActivity extends AppCompatActivity {
                                             .subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe(
-                                                    new Action1<Long>() {
+                                                    new Consumer<Long>() {
                                                         @Override
-                                                        public void call(Long aLong) {
+                                                        public void accept(Long aLong) throws Exception {
+                                                            Log.e("TEST", "call: I have been called");
                                                             if (aLong == 0) {
                                                                 Log.e("TEST", "call: populating database");
-                                                                mDatabaseInitSubscription.unsubscribe();
+                                                                mDatabaseInitSubscription.dispose();
                                                                 populateDatabase();
                                                             } else {
                                                                 Log.e("TEST", "call: clearing database");
@@ -60,17 +62,31 @@ public class MainActivity extends AppCompatActivity {
     private void clearDatabase() {
         RxSQLite.delete(TestModel.class)
                 .asExecuteObservable()
-                .publishTableUpdates()
+                .notifyOfUpdates()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(
+                        new Consumer<NullValue>() {
+                            @Override
+                            public void accept(NullValue nullValue) throws Exception {
+                                Log.e("TEST", "TestModel table has been cleared");
+                            }
+                        }
+                );
 
         RxSQLite.delete(InheritanceTestModel.class)
                 .asExecuteObservable()
-                .publishTableUpdates()
+                .notifyOfUpdates()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(
+                        new Consumer<NullValue>() {
+                            @Override
+                            public void accept(NullValue nullValue) throws Exception {
+                                Log.e("TEST", "InheritanceTestModel table has been cleared");
+                            }
+                        }
+                );
     }
 
     private void populateList() {
@@ -84,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
                         .restartOnChange(TestModel.class, InheritanceTestModel.class)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<List<TestModel>>() {
+                        .subscribe(new Consumer<List<TestModel>>() {
                             @Override
-                            public void call(List<TestModel> testModels) {
+                            public void accept(List<TestModel> testModels) throws Exception {
                                 Log.e("TEST", "We have " + testModels.size() + " test models ");
                             }
                         }));
@@ -98,11 +114,12 @@ public class MainActivity extends AppCompatActivity {
                         .asListObservable()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<List<InheritanceTestModel>>() {
+                        .subscribe(new Consumer<List<InheritanceTestModel>>() {
                             @Override
-                            public void call(List<InheritanceTestModel> testModels) {
+                            public void accept(List<InheritanceTestModel> testModels) throws Exception {
                                 Log.e("TEST", "We have " + testModels.size() + " inheritance models ");
                             }
+
                         }));
     }
 
@@ -129,9 +146,9 @@ public class MainActivity extends AppCompatActivity {
                 .insertAsObservable(modelOne)
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<TestModel>() {
+                .subscribe(new Consumer<TestModel>() {
                     @Override
-                    public void call(TestModel testModel) {
+                    public void accept(TestModel testModel) throws Exception {
                         Log.e("TEST", "Inserting model one");
                     }
                 });
@@ -141,9 +158,9 @@ public class MainActivity extends AppCompatActivity {
                 .insertAsObservable(modelTwo)
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<TestModel>() {
+                .subscribe(new Consumer<TestModel>() {
                     @Override
-                    public void call(TestModel testModel) {
+                    public void accept(TestModel testModel) {
                         Log.e("TEST", "Inserting model two");
                     }
                 });
@@ -153,9 +170,9 @@ public class MainActivity extends AppCompatActivity {
                 .insertAsObservable(modelThree)
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
-                  .subscribe(new Action1<TestModel>() {
+                  .subscribe(new Consumer<TestModel>() {
                       @Override
-                      public void call(TestModel testModel) {
+                      public void accept(TestModel testModel) {
                           Log.e("TEST", "Inserting model three");
                       }
                   });
@@ -185,9 +202,9 @@ public class MainActivity extends AppCompatActivity {
                 .build()
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Void>() {
+                .subscribe(new Consumer<NullValue>() {
                     @Override
-                    public void call(Void aVoid) {
+                    public void accept(NullValue aVoid) {
                         Log.e("TEST", "Finished inserting modelOperation models ");
                     }
                 }));
@@ -212,9 +229,9 @@ public class MainActivity extends AppCompatActivity {
                 .build()
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Void>() {
+                .subscribe(new Consumer<NullValue>() {
                     @Override
-                    public void call(Void aVoid) {
+                    public void accept(NullValue aVoid) {
                         Log.e("TEST", "Finished inserting modelOperation models ");
                     }
                 }));
@@ -258,15 +275,15 @@ public class MainActivity extends AppCompatActivity {
                         }).build()
                         .subscribeOn(DBFlowSchedulers.background())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<Void>() {
+                        .subscribe(new Consumer<NullValue>() {
                             @Override
-                            public void call(Void aVoid) {
+                            public void accept(NullValue aVoid) {
                                 Log.e("TEST", "Finished inserting genericTransactionBlock models ");
                                 populateList();
                             }
-                        }, new Action1<Throwable>() {
+                        }, new Consumer<Throwable>() {
                             @Override
-                            public void call(Throwable throwable) {
+                            public void accept(Throwable throwable) {
                                 Log.e("TEST", "call: Transaction error occurred", throwable);
                             }
                         }));
@@ -275,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         //Clean up all data subscribes
-        mDataSubscribers.unsubscribe();
+        mDataSubscribers.dispose();
         SQLite.delete().from(TestModel.class).execute();
         SQLite.delete().from(InheritanceTestModel.class).execute();
         super.onDestroy();

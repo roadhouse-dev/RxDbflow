@@ -7,7 +7,7 @@ import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import au.com.roadhouse.rxdbflow.RxDbFlow;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * A DBFlow BaseModel implementation which provides observables for saving, updating, inserting, and

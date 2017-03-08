@@ -14,7 +14,8 @@ import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteObservable;
-import rx.Observable;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowObservable;
+import io.reactivex.Observable;
 
 /**
  * Provides a set block for a select statement
@@ -127,7 +128,7 @@ public class RxSet<TModel> implements WhereBase<TModel>, QueriableObservable, Rx
 
 
     @Override
-    public Observable<Long> asCountObservable() {
+    public DBFlowObservable<Long> asCountObservable() {
         return where().asCountObservable();
     }
 
@@ -142,12 +143,12 @@ public class RxSet<TModel> implements WhereBase<TModel>, QueriableObservable, Rx
     }
 
     @Override
-    public Observable<Void> asExecuteObservable(DatabaseWrapper databaseWrapper) {
+    public DBFlowExecuteObservable asExecuteObservable(DatabaseWrapper databaseWrapper) {
         return where().asExecuteObservable(databaseWrapper);
     }
 
     @Override
-    public Observable<Cursor> asQueryObservable() {
+    public DBFlowObservable<Cursor> asQueryObservable() {
         return where().asQueryObservable();
     }
 }

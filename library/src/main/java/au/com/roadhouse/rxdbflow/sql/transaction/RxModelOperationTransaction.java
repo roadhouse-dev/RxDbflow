@@ -1,5 +1,6 @@
 package au.com.roadhouse.rxdbflow.sql.transaction;
 
+
 import android.support.annotation.IntDef;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -12,9 +13,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.roadhouse.rxdbflow.sql.language.NullValue;
 import au.com.roadhouse.rxdbflow.structure.RxBaseModel;
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 
 /**
  * <p>Provides a transaction block that runs a series of operations on a list of models. This class has no
@@ -25,7 +27,45 @@ import rx.Subscriber;
  * more information on how these optimisations work.</p>
  * <p> Creation of a ModelOperationTransaction is via the use of the inner builder. </p>
  */
-public class RxModelOperationTransaction extends Observable<Void> {
+public class RxModelOperationTransaction extends Observable<NullValue> {
+
+    private final List<Object> mModelList;
+    private final List<Integer> mOperationList;
+    private final DatabaseWrapper mDatabaseWrapper;
+    private final boolean mCanBatchTransaction;
+    private boolean mMustUserAdapter;
+
+    @Override
+    protected void subscribeActual(Observer<? super NullValue> observer) {
+        if (mOperationList.size() != mModelList.size()) {
+            observer.onError(new IllegalStateException("model list and operation list must be of the same size"));
+            return;
+        }
+
+        try {
+            mDatabaseWrapper.beginTransaction();
+            if (mModelList.size() == 0) {
+                observer.onNext(new NullValue());
+                observer.onComplete();
+                return;
+            } else if (mCanBatchTransaction) { //All operations are the same, and all Model types are the same
+                @ModelOperation int batchOperation = mOperationList.get(0);
+                performBatchOperation(batchOperation);
+            } else if (mMustUserAdapter) {
+                performIndividualAdapterOperations();
+            } else {
+                performIndividualOperations();
+            }
+            mDatabaseWrapper.setTransactionSuccessful();
+
+            observer.onNext(new NullValue());
+            observer.onComplete();
+        } catch (Exception e) {
+            observer.onError(e);
+        } finally {
+            mDatabaseWrapper.endTransaction();
+        }
+    }
 
     @IntDef({MODEL_OPERATION_UNSET, MODEL_OPERATION_SAVE, MODEL_OPERATION_UPDATE, MODEL_OPERATION_DELETE, MODEL_OPERATION_INSERT})
     @Retention(RetentionPolicy.SOURCE)
@@ -39,107 +79,61 @@ public class RxModelOperationTransaction extends Observable<Void> {
     public static final int MODEL_OPERATION_DELETE = 3;
 
     private RxModelOperationTransaction(Builder builder) {
-        //noinspection unchecked
-        super(new OnTransactionSubscribe(builder.mModelList, builder.mOperationList, builder.mDatabaseWrapper, builder.mCanBatchTransaction, builder.mMustUseAdapters));
+        mModelList = builder.mModelList;
+        mOperationList = builder.mOperationList;
+        mDatabaseWrapper = builder.mDatabaseWrapper;
+        mCanBatchTransaction = builder.mCanBatchTransaction;
+        mMustUserAdapter = builder.mMustUseAdapters;
     }
 
-    private static class OnTransactionSubscribe implements OnSubscribe<Void> {
+    private void performIndividualOperations() {
+        for (int i = 0; i < mModelList.size(); i++) {
+            @ModelOperation int operation = mOperationList.get(i);
+            Model model = (Model) mModelList.get(i);
 
-        private final List<Object> mModelList;
-        private final List<Integer> mOperationList;
-        private final DatabaseWrapper mDatabaseWrapper;
-        private final boolean mCanBatchTransaction;
-        private boolean mMustUserAdapter;
-
-        private OnTransactionSubscribe(List<Object> modelList, List<Integer> operationList, DatabaseWrapper databaseWrapper, boolean canBatchTransaction, boolean mustUseAdapter) {
-            mModelList = modelList;
-            mOperationList = operationList;
-            mDatabaseWrapper = databaseWrapper;
-            mCanBatchTransaction = canBatchTransaction;
-            mMustUserAdapter = mustUseAdapter;
-        }
-
-        @Override
-        public void call(Subscriber<? super Void> subscriber) {
-
-            if (mOperationList.size() != mModelList.size()) {
-                subscriber.onError(new IllegalStateException("model list and operation list must be of the same size"));
-                return;
-            }
-
-            try {
-                mDatabaseWrapper.beginTransaction();
-                if (mModelList.size() == 0) {
-                    subscriber.onNext(null);
-                    subscriber.onCompleted();
-                    return;
-                } else if (mCanBatchTransaction) { //All operations are the same, and all Model types are the same
-                    @ModelOperation int batchOperation = mOperationList.get(0);
-                    performBatchOperation(batchOperation);
-                } else if (mMustUserAdapter) {
-                    performIndividualAdapterOperations();
-                } else {
-                    performIndividualOperations();
-                }
-                mDatabaseWrapper.setTransactionSuccessful();
-
-                subscriber.onNext(null);
-                subscriber.onCompleted();
-            } catch (Exception e) {
-                subscriber.onError(e);
-            } finally {
-                mDatabaseWrapper.endTransaction();
-            }
-        }
-
-        private void performIndividualOperations() {
-            for (int i = 0; i < mModelList.size(); i++) {
-                @ModelOperation int operation = mOperationList.get(i);
-                Model model = (Model) mModelList.get(i);
-
-                if (operation == MODEL_OPERATION_SAVE) {
-                    model.save();
-                } else if (operation == MODEL_OPERATION_DELETE) {
-                    model.delete();
-                } else if (operation == MODEL_OPERATION_INSERT) {
-                    model.insert();
-                } else if (operation == MODEL_OPERATION_UPDATE) {
-                    model.update();
-                }
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        private void performIndividualAdapterOperations() {
-            for (int i = 0; i < mModelList.size(); i++) {
-                @ModelOperation int operation = mOperationList.get(i);
-                Object model = mModelList.get(i);
-                ModelAdapter modelAdapter = FlowManager.getModelAdapter(model.getClass());
-
-                if (operation == MODEL_OPERATION_SAVE) {
-                    modelAdapter.save(model);
-                } else if (operation == MODEL_OPERATION_DELETE) {
-                    modelAdapter.delete(model);
-                } else if (operation == MODEL_OPERATION_INSERT) {
-                    modelAdapter.insert(model);
-                } else if (operation == MODEL_OPERATION_UPDATE) {
-                    modelAdapter.update(model);
-                }
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        private void performBatchOperation(@ModelOperation int batchOperation) {
-            ModelAdapter adapter = FlowManager.getModelAdapter(mModelList.get(0).getClass());
-            if (batchOperation == MODEL_OPERATION_SAVE) {
-                adapter.saveAll(mModelList);
-            } else if (batchOperation == MODEL_OPERATION_INSERT) {
-                adapter.insertAll(mModelList);
-            } else if (batchOperation == MODEL_OPERATION_UPDATE) {
-                adapter.updateAll(mModelList);
+            if (operation == MODEL_OPERATION_SAVE) {
+                model.save();
+            } else if (operation == MODEL_OPERATION_DELETE) {
+                model.delete();
+            } else if (operation == MODEL_OPERATION_INSERT) {
+                model.insert();
+            } else if (operation == MODEL_OPERATION_UPDATE) {
+                model.update();
             }
         }
     }
+
+    @SuppressWarnings("unchecked")
+    private void performIndividualAdapterOperations() {
+        for (int i = 0; i < mModelList.size(); i++) {
+            @ModelOperation int operation = mOperationList.get(i);
+            Object model = mModelList.get(i);
+            ModelAdapter modelAdapter = FlowManager.getModelAdapter(model.getClass());
+
+            if (operation == MODEL_OPERATION_SAVE) {
+                modelAdapter.save(model);
+            } else if (operation == MODEL_OPERATION_DELETE) {
+                modelAdapter.delete(model);
+            } else if (operation == MODEL_OPERATION_INSERT) {
+                modelAdapter.insert(model);
+            } else if (operation == MODEL_OPERATION_UPDATE) {
+                modelAdapter.update(model);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void performBatchOperation(@ModelOperation int batchOperation) {
+        ModelAdapter adapter = FlowManager.getModelAdapter(mModelList.get(0).getClass());
+        if (batchOperation == MODEL_OPERATION_SAVE) {
+            adapter.saveAll(mModelList);
+        } else if (batchOperation == MODEL_OPERATION_INSERT) {
+            adapter.insertAll(mModelList);
+        } else if (batchOperation == MODEL_OPERATION_UPDATE) {
+            adapter.updateAll(mModelList);
+        }
+    }
+
 
     /**
      * A builder which creates a new model operation transaction block.

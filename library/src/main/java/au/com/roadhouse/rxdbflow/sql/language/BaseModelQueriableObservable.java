@@ -1,5 +1,7 @@
 package au.com.roadhouse.rxdbflow.sql.language;
 
+import android.database.Cursor;
+
 import com.raizlabs.android.dbflow.list.FlowCursorList;
 import com.raizlabs.android.dbflow.list.FlowQueryList;
 import com.raizlabs.android.dbflow.sql.language.BaseModelQueriable;
@@ -16,6 +18,7 @@ import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCustomListObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCustomModelObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowListObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowModelObservable;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowQueryListObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowResultObservable;
 import io.reactivex.Observable;
@@ -34,7 +37,7 @@ public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservabl
      * {@inheritDoc}
      */
     @Override
-    public Observable<TModel> asSingleObservable() {
+    public DBFlowObservable<TModel> asSingleObservable() {
         return new DBFlowModelObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable, null);
     }
 
@@ -42,7 +45,7 @@ public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservabl
      * {@inheritDoc}
      */
     @Override
-    public Observable<TModel> asSingleObservable(DatabaseWrapper databaseWrapper) {
+    public DBFlowObservable<TModel> asSingleObservable(DatabaseWrapper databaseWrapper) {
         return new DBFlowModelObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable, databaseWrapper);
     }
 
@@ -50,7 +53,7 @@ public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservabl
      * {@inheritDoc}
      */
     @Override
-    public DBFlowListObservable<TModel> asListObservable() {
+    public DBFlowObservable<List<TModel>> asListObservable() {
         return new DBFlowListObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable, null);
     }
 
@@ -58,7 +61,7 @@ public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservabl
      * {@inheritDoc}
      */
     @Override
-    public DBFlowListObservable<TModel> asListObservable(DatabaseWrapper databaseWrapper) {
+    public DBFlowObservable<List<TModel>> asListObservable(DatabaseWrapper databaseWrapper) {
         return new DBFlowListObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable, databaseWrapper);
     }
 
@@ -66,7 +69,7 @@ public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservabl
      * {@inheritDoc}
      */
     @Override
-    public Observable<CursorResult<TModel>> asResultsObservable() {
+    public DBFlowObservable<CursorResult<TModel>> asResultsObservable() {
         return new DBFlowResultObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable);
     }
 
@@ -74,7 +77,7 @@ public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservabl
      * {@inheritDoc}
      */
     @Override
-    public Observable<FlowQueryList<TModel>> asQueryListObservable() {
+    public DBFlowObservable<FlowQueryList<TModel>> asQueryListObservable() {
         return new DBFlowQueryListObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable);
     }
 
@@ -82,15 +85,15 @@ public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservabl
      * {@inheritDoc}
      */
     @Override
-    public Observable<FlowCursorList<TModel>> asCursorListObservable() {
-        return new DBFlowCursorListObservable<>(mRealModelQueriable.getTable(), mRealModelQueriable);
+    public DBFlowObservable<FlowCursorList<TModel>> asCursorListObservable() {
+        return new DBFlowCursorListObservable<TModel>(mRealModelQueriable.getTable(), mRealModelQueriable);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DBFlowCursorObservable asQueryObservable() {
+    public DBFlowObservable<Cursor> asQueryObservable() {
         return new DBFlowCursorObservable(mRealModelQueriable.getTable(), mRealModelQueriable, null);
     }
 
@@ -98,16 +101,16 @@ public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservabl
      * {@inheritDoc}
      */
     @Override
-    public <AQueryModel extends BaseQueryModel>Observable<AQueryModel> asCustomSingleObservable(Class<AQueryModel> customClazz) {
-        return new DBFlowCustomModelObservable<>(customClazz, mRealModelQueriable);
+    public <AQueryModel extends BaseQueryModel> Observable<AQueryModel> asCustomSingleObservable(Class<AQueryModel> customClazz) {
+        return new DBFlowCustomModelObservable<>(customClazz, mRealModelQueriable.getTable(), mRealModelQueriable);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public <AQueryModel extends BaseQueryModel>Observable<List<AQueryModel>> asCustomListObservable(Class<AQueryModel> customClazz) {
-        return new DBFlowCustomListObservable<>(customClazz, mRealModelQueriable);
+    public <AQueryModel extends BaseQueryModel> Observable<List<AQueryModel>> asCustomListObservable(Class<AQueryModel> customClazz) {
+        return new DBFlowCustomListObservable<>(customClazz,  mRealModelQueriable.getTable(), mRealModelQueriable);
     }
 
 }

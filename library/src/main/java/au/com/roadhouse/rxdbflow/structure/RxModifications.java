@@ -4,7 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * Provides a common interface for any
