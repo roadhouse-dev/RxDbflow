@@ -6,7 +6,7 @@ import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteObservable;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface QueriableObservable {
 

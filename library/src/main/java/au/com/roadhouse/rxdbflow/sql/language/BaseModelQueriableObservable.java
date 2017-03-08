@@ -6,7 +6,6 @@ import com.raizlabs.android.dbflow.sql.language.BaseModelQueriable;
 import com.raizlabs.android.dbflow.sql.language.CursorResult;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.BaseQueryModel;
-import com.raizlabs.android.dbflow.structure.Model;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.List;
@@ -19,7 +18,7 @@ import au.com.roadhouse.rxdbflow.sql.observables.DBFlowListObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowModelObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowQueryListObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowResultObservable;
-import rx.Observable;
+import io.reactivex.Observable;
 
 
 public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservable<TModel> implements ModelQueriableObservable<TModel> {

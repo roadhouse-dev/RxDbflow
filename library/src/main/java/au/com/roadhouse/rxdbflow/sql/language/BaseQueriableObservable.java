@@ -4,7 +4,6 @@ import com.raizlabs.android.dbflow.sql.language.BaseQueriable;
 import com.raizlabs.android.dbflow.sql.queriable.Queriable;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCountObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCursorObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteObservable;
 

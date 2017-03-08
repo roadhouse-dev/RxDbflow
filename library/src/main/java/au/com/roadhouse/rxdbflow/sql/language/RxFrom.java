@@ -15,7 +15,6 @@ import com.raizlabs.android.dbflow.sql.language.property.IndexProperty;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.Model;
 
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCountObservable;
 import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCursorObservable;
 
 /**

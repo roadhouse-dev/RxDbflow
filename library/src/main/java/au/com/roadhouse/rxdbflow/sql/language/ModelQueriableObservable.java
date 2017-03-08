@@ -8,7 +8,8 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 public interface ModelQueriableObservable<TModel> extends QueriableObservable {
 

@@ -12,8 +12,8 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
-import rx.Observable;
-import rx.functions.Func0;
+import io.reactivex.Observable;
+
 
 public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
 
