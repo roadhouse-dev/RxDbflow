@@ -16,7 +16,7 @@ import io.reactivex.Observable;
 @SuppressWarnings("unchecked")
 public class RxBaseModel<M extends RxBaseModel> extends BaseModel implements RxModifications<M> {
 
-    private RxModelAdapter<? extends RxBaseModel> mModelAdapter;
+    private transient RxModelAdapter<? extends RxBaseModel> mModelAdapter;
 
     /**
      * Returns an observable for saving the object in the database
