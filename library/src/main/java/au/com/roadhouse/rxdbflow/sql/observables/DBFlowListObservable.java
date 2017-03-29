@@ -38,7 +38,7 @@ public class DBFlowListObservable<TModel> extends DBFlowObservable<List<TModel>>
 
     @Override
     protected Class getPrimaryModelClass() {
-        return null;
+        return mModelClazz;
     }
 
     @Override
