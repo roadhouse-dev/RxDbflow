@@ -17,13 +17,12 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
 
 
-
 public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstreamObservableSource<T> {
     private final ObservableSource<T> mSource;
     private final Class[] mSubscribedClasses;
     private final ValueAction<T> mRestartAction;
 
-    public DBFlowRestartOnChange(Observable<T> source, Class[] subscribedClasses, ValueAction<T> restartAction){
+    public DBFlowRestartOnChange(Observable<T> source, Class[] subscribedClasses, ValueAction<T> restartAction) {
         mSource = source;
         mSubscribedClasses = subscribedClasses;
         mRestartAction = restartAction;
@@ -81,10 +80,7 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
                     new FlowContentObserver.OnTableChangedListener() {
                         @Override
                         public void onTableChanged(@Nullable Class<?> tableChanged, BaseModel.Action action) {
-
-                            if (isDisposed()) {
-                                mFlowContentObserver.unregisterForContentChanges(FlowManager.getContext());
-                            } else {
+                            if (!isDisposed()) {
                                 mActual.onNext(mRestartAction.run());
                             }
                         }
@@ -93,6 +89,7 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
 
         @Override
         public void dispose() {
+            mFlowContentObserver.unregisterForContentChanges(FlowManager.getContext());
             mIsDisposed = true;
         }
 
