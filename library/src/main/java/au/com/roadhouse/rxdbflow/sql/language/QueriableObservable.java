@@ -5,50 +5,49 @@ import android.database.Cursor;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteObservable;
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowObservable;
-import io.reactivex.Observable;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteCompletable;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowSingle;
 
 public interface QueriableObservable {
 
     /**
-     * Creates an observable that emits a long value. This should be paired with {@link RxSQLite#selectCountOf(IProperty[])}
+     * Creates an Single that emits a long value. This should be paired with {@link RxSQLite#selectCountOf(IProperty[])}
      * or a query that returns a single long/integer value. Calling this on any other query could result in unexpected return values
      *
-     * @return An observable that emits a long result
+     * @return An Single that emits a long result
      */
-    DBFlowObservable<Long> asCountObservable();
+    DBFlowSingle<Long> asCountSingle();
 
     /**
-     * Creates an observable that emits a long value. This should be paired with {@link RxSQLite#selectCountOf(IProperty[])}
+     * Creates an Single that emits a long value. This should be paired with {@link RxSQLite#selectCountOf(IProperty[])}
      * or a query that returns a single long/integer value. Calling this on any other query could result in an unexpected emitted
      * value
      *
      * @param databaseWrapper The database wrapper to use for the query
-     * @return An observable that emits a long result
+     * @return An Single that emits a long result
      */
-    Observable<Long> asCountObservable(DatabaseWrapper databaseWrapper);
+    DBFlowSingle<Long> asCountSingle(DatabaseWrapper databaseWrapper);
 
     /**
-     * Creates an observable that executes a SQL statement. This is usually used with CRUD statements as
+     * Creates an Single that executes a SQL statement. This is usually used with CRUD statements as
      * it only emits a Void value
      *
-     * @return An observable that executes a SQL statement
+     * @return An Single that executes a SQL statement
      */
-    DBFlowExecuteObservable asExecuteObservable();
+    DBFlowExecuteCompletable asExecuteCompletable();
 
     /**
-     * Creates an observable that executes a SQL statement. This is usually used with CRUD statements as
+     * Creates an Single that executes a SQL statement. This is usually used with CRUD statements as
      * it only emits a Void value
      *
      * @param databaseWrapper The database wrapper to use for the query
-     * @return An observable that executes a SQL statement
+     * @return An Single that executes a SQL statement
      */
-    DBFlowExecuteObservable asExecuteObservable(DatabaseWrapper databaseWrapper);
+    DBFlowExecuteCompletable asExecuteCompletable(DatabaseWrapper databaseWrapper);
 
     /**
-     * Creates an observable that emits a cursor containing the results of the query
-     * @return An observable that emits a cursor
+     * Creates an Single that emits a cursor containing the results of the query
+     * @return An Single that emits a cursor
      */
-    DBFlowObservable<Cursor> asQueryObservable();
+    DBFlowSingle<Cursor> asQuerySingle();
 }

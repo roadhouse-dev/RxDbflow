@@ -1,6 +1,7 @@
 package au.com.roadhouse.rxdbflow.sql.observables.operators;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
@@ -27,7 +28,6 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
         mSubscribedClasses = subscribedClasses;
         mRestartAction = restartAction;
     }
-
 
     @Override
     protected void subscribeActual(Observer<? super T> observer) {
@@ -67,7 +67,8 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
 
         @Override
         public void onComplete() {
-            mActual.onComplete();
+            Log.e("TEST", "OnComplete called and swallowed");
+            //We capture any completes here to avoid disposing
         }
 
         @Override
@@ -93,6 +94,7 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
         public void dispose() {
             mFlowContentObserver.unregisterForContentChanges(FlowManager.getContext());
             mIsDisposed = true;
+            mActual.onComplete();
         }
 
         @Override

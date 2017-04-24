@@ -14,13 +14,9 @@ import com.raizlabs.android.dbflow.sql.language.WhereBase;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.sql.language.property.IndexProperty;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
-import com.raizlabs.android.dbflow.structure.BaseQueryModel;
 import com.raizlabs.android.dbflow.structure.Model;
 
-import java.util.List;
-
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowObservable;
-import io.reactivex.Observable;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowSingle;
 
 /**
  * Constructs a From clause for a SQL query
@@ -237,22 +233,13 @@ public class RxFrom<TModel> extends BaseModelQueriableObservable<TModel> impleme
     }
 
     @Override
-    public DBFlowObservable<Cursor> asQueryObservable() {
-        return where().asQueryObservable();
+    public DBFlowSingle<Cursor> asQuerySingle() {
+        return where().asQuerySingle();
     }
 
     @Override
-    public DBFlowObservable<Long> asCountObservable() {
-        return where().asCountObservable();
+    public DBFlowSingle<Long> asCountSingle() {
+        return where().asCountSingle();
     }
 
-    @Override
-    public <AQueryModel extends BaseQueryModel> Observable<AQueryModel> asCustomSingleObservable(Class<AQueryModel> customClazz) {
-        return null;
-    }
-
-    @Override
-    public <AQueryModel extends BaseQueryModel> Observable<List<AQueryModel>> asCustomListObservable(Class<AQueryModel> customClazz) {
-        return null;
-    }
 }

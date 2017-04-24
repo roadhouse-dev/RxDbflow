@@ -13,9 +13,8 @@ import com.raizlabs.android.dbflow.sql.language.WhereBase;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteObservable;
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowObservable;
-import io.reactivex.Observable;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteCompletable;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowSingle;
 
 /**
  * Provides a set block for a select statement
@@ -128,27 +127,27 @@ public class RxSet<TModel> implements WhereBase<TModel>, QueriableObservable, Rx
 
 
     @Override
-    public DBFlowObservable<Long> asCountObservable() {
-        return where().asCountObservable();
+    public DBFlowSingle<Long> asCountSingle() {
+        return where().asCountSingle();
     }
 
     @Override
-    public Observable<Long> asCountObservable(DatabaseWrapper databaseWrapper) {
-        return where().asCountObservable(databaseWrapper);
+    public DBFlowSingle<Long> asCountSingle(DatabaseWrapper databaseWrapper) {
+        return where().asCountSingle(databaseWrapper);
     }
 
     @Override
-    public DBFlowExecuteObservable asExecuteObservable() {
-        return where().asExecuteObservable();
+    public DBFlowExecuteCompletable asExecuteCompletable() {
+        return where().asExecuteCompletable();
     }
 
     @Override
-    public DBFlowExecuteObservable asExecuteObservable(DatabaseWrapper databaseWrapper) {
-        return where().asExecuteObservable(databaseWrapper);
+    public DBFlowExecuteCompletable asExecuteCompletable(DatabaseWrapper databaseWrapper) {
+        return where().asExecuteCompletable(databaseWrapper);
     }
 
     @Override
-    public DBFlowObservable<Cursor> asQueryObservable() {
-        return where().asQueryObservable();
+    public DBFlowSingle<Cursor> asQuerySingle() {
+        return where().asQuerySingle();
     }
 }

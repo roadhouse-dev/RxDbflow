@@ -21,6 +21,7 @@ import au.com.roadhouse.rxdbflow.structure.RxModelAdapter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -35,58 +36,71 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mDataSubscribers = new CompositeDisposable();
 
-        mDatabaseInitSubscription = RxSQLite.select(Method.count())
-                                            .from(TestModel.class)
-                                            .asCountObservable()
-                                            .restartOnChange()
-                                            .subscribeOn(Schedulers.io())
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe(
-                                                    new Consumer<Long>() {
-                                                        @Override
-                                                        public void accept(Long aLong) throws Exception {
-                                                            Log.e("TEST", "call: I have been called");
-                                                            if (aLong == 0) {
-                                                                Log.e("TEST", "call: populating database");
-                                                                mDatabaseInitSubscription.dispose();
-                                                                populateDatabase();
-                                                            } else {
-                                                                Log.e("TEST", "call: clearing database");
-                                                                clearDatabase();
-                                                            }
-                                                        }
-                                                    }
-                                            );
+        mDatabaseInitSubscription =
+                RxSQLite.select(Method.count())
+                        .from(TestModel.class)
+                        .asCountSingle()
+                        .restartOnChange()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                new Consumer<Long>() {
+                                    @Override
+                                    public void accept(Long aLong) throws Exception {
+                                        Log.e("TEST", "call: I have been called");
+                                        if (aLong == 0) {
+                                            Log.e("TEST", "call: populating database");
+                                            mDatabaseInitSubscription.dispose();
+                                            populateDatabase();
+                                        } else {
+                                            Log.e("TEST", "call: clearing database");
+                                            clearDatabase();
+                                        }
+                                    }
+                                },
+                                new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(Throwable throwable) throws Exception {
+
+                                    }
+                                },
+                                new Action() {
+                                    @Override
+                                    public void run() throws Exception {
+                                        Log.e("TEST", "completed");
+                                    }
+                                }
+
+                        );
     }
 
     private void clearDatabase() {
         RxSQLite.delete(TestModel.class)
-                .asExecuteObservable()
-                .notifyOfUpdates()
+                .asExecuteCompletable()
+//                .notifyOfUpdates()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        new Consumer<NullValue>() {
+                        new Action() {
                             @Override
-                            public void accept(NullValue nullValue) throws Exception {
+                            public void run() throws Exception {
                                 Log.e("TEST", "TestModel table has been cleared");
                             }
-                        }
-                );
-
-        RxSQLite.delete(InheritanceTestModel.class)
-                .asExecuteObservable()
-                .notifyOfUpdates()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Consumer<NullValue>() {
-                            @Override
-                            public void accept(NullValue nullValue) throws Exception {
-                                Log.e("TEST", "InheritanceTestModel table has been cleared");
-                            }
-                        }
-                );
+                        });
+//
+//        RxSQLite.delete(InheritanceTestModel.class)
+//                .asExecuteCompletable()
+//                .notifyOfUpdates()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(
+//                        new Action() {
+//                            @Override
+//                            public void run() throws Exception {
+//                                Log.e("TEST", "InheritanceTestModel table has been cleared");
+//                            }
+//                        }
+//                );
     }
 
     private void populateList() {
@@ -96,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         mDataSubscribers.add(
                 RxSQLite.select()
                         .from(TestModel.class)
-                        .asListObservable()
+                        .asListSingle()
                         .restartOnChange(TestModel.class, InheritanceTestModel.class)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -111,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         mDataSubscribers.add(
                 RxSQLite.select()
                         .from(InheritanceTestModel.class)
-                        .asListObservable()
+                        .asListSingle()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<List<InheritanceTestModel>>() {
@@ -170,12 +184,12 @@ public class MainActivity extends AppCompatActivity {
                 .insertAsObservable(modelThree)
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
-                  .subscribe(new Consumer<TestModel>() {
-                      @Override
-                      public void accept(TestModel testModel) {
-                          Log.e("TEST", "Inserting model three");
-                      }
-                  });
+                .subscribe(new Consumer<TestModel>() {
+                    @Override
+                    public void accept(TestModel testModel) {
+                        Log.e("TEST", "Inserting model three");
+                    }
+                });
 
 
     }

@@ -8,74 +8,73 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.List;
 
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowObservable;
-import io.reactivex.Observable;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowSingle;
 
 
 public interface ModelQueriableObservable<TModel> extends QueriableObservable {
 
     /**
-     * Creates an observable that emits a single model from a query. This will be the first record
+     * Creates an Single that emits a single model from a query. This will be the first record
      * returned by the query.
-     * @return An observable that emits a single model
+     * @return An Single that emits a single model
      */
-    DBFlowObservable<TModel> asSingleObservable();
+    DBFlowSingle<TModel> asSingle();
 
     /**
-     * Creates an observable that emits a single model from a query. This will be the first record
+     * Creates an Single that emits a single model from a query. This will be the first record
      * returned by the query.
      * @param databaseWrapper The database wrapper from which to run the query
-     * @return An observable that emits a single model
+     * @return An Single that emits a single model
      */
-    DBFlowObservable<TModel> asSingleObservable(DatabaseWrapper databaseWrapper);
+    DBFlowSingle<TModel> asSingle(DatabaseWrapper databaseWrapper);
 
     /**
-     * Creates an observable that emits a list of models from a query.
-     * @return An observable that emits a list of model
+     * Creates an Single that emits a list of models from a query.
+     * @return An Single that emits a list of model
      */
-    DBFlowObservable<List<TModel>> asListObservable();
+    DBFlowSingle<List<TModel>> asListSingle();
 
     /**
-     * Creates an observable that emits a list of models from a query.
+     * Creates an Single that emits a list of models from a query.
      *
      * @param databaseWrapper The database wrapper from which to run the query
-     * @return An observable that emits a list of model
+     * @return An Single that emits a list of model
      */
-    DBFlowObservable<List<TModel>> asListObservable(DatabaseWrapper databaseWrapper);
+    DBFlowSingle<List<TModel>> asListSingle(DatabaseWrapper databaseWrapper);
 
     /**
-     * Creates an observable that emits the results of a query as a CursorResult.
+     * Creates an Single that emits the results of a query as a CursorResult.
      *
-     * @return An observable that emits a CursorResult
+     * @return An Single that emits a CursorResult
      */
-    DBFlowObservable<CursorResult<TModel>> asResultsObservable();
+    DBFlowSingle<CursorResult<TModel>> asResultsSingle();
 
     /**
-     * Creates an observable that emits the results of a query as a FlowQueryList.
+     * Creates an Single that emits the results of a query as a FlowQueryList.
      *
-     * @return An observable that emits a FlowQueryList
+     * @return An Single that emits a FlowQueryList
      */
-    DBFlowObservable<FlowQueryList<TModel>> asQueryListObservable();
+    DBFlowSingle<FlowQueryList<TModel>> asQueryListSingle();
 
     /**
-     * Creates an observable that emits the results of a query as a FlowCursorList.
+     * Creates an Single that emits the results of a query as a FlowCursorList.
      *
-     * @return An observable that emits a FlowCursorList
+     * @return An Single that emits a FlowCursorList
      */
-    DBFlowObservable<FlowCursorList<TModel>> asCursorListObservable();
+    DBFlowSingle<FlowCursorList<TModel>> asCursorListSingle();
 
     /**
-     * Creates an observable that emits a single custom QueryModel class. This will be the first record
+     * Creates an Single that emits a single custom QueryModel class. This will be the first record
      * returned by the query.
      *
-     * @return An observable that emits a  single custom QueryModel class.
+     * @return An Single that emits a  single custom QueryModel class.
      */
-    <AQueryModel extends BaseQueryModel>Observable<AQueryModel> asCustomSingleObservable(Class<AQueryModel> customClazz);
+    <AQueryModel extends BaseQueryModel>DBFlowSingle<AQueryModel> asCustomSingle(Class<AQueryModel> customClazz);
 
     /**
      * Creates an observable that emits the results of a query as a list of custom QueryModel objects.
      *
      * @return An observable that emits a  single custom QueryModel class.
      */
-    <AQueryModel extends BaseQueryModel>Observable<List<AQueryModel>> asCustomListObservable(Class<AQueryModel> customClazz);
+    <AQueryModel extends BaseQueryModel>DBFlowSingle<List<AQueryModel>> asCustomListObservable(Class<AQueryModel> customClazz);
 }

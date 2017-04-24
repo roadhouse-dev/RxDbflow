@@ -3,43 +3,53 @@ package au.com.roadhouse.rxdbflow.sql.observables.operators;
 import com.raizlabs.android.dbflow.sql.SqlUtils;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowBaseCompletable;
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
+import io.reactivex.CompletableSource;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
+import io.reactivex.internal.fuseable.HasUpstreamCompletableSource;
 
 
-public class NotifyOfUpdate<T> extends Observable<T> implements HasUpstreamObservableSource<T> {
+public class NotifyOfUpdate<ModelType> extends DBFlowBaseCompletable<ModelType> implements HasUpstreamCompletableSource {
 
-    private final Observable<T> mSource;
-    private final Class mModelClazz;
+    private final Completable mSource;
     private final String mQuery;
 
-    public NotifyOfUpdate(Observable<T> source, String query, Class modelClass) {
+    public NotifyOfUpdate(Completable source, String query, Class<ModelType> clazz) {
+        super(clazz);
         mSource = source;
         mQuery = query;
-        mModelClazz = modelClass;
     }
 
     @Override
-    protected void subscribeActual(Observer<? super T> observer) {
-        mSource.subscribe(new NotifyOfUpdateObserver<T>(observer, mQuery, mModelClazz));
+    public CompletableSource source() {
+        return mSource;
     }
 
     @Override
-    public ObservableSource<T> source() {
-        return null;
+    protected void subscribeActual(CompletableObserver observer) {
+        mSource.subscribe(new CompletableObservable(observer, mQuery, getPrimaryModelClass()));
+        super.subscribeActual(observer);
     }
 
-    private class NotifyOfUpdateObserver<T> implements Observer<T>, Disposable {
+    @Override
+    public void run() {
+        if(mQuery.toLowerCase().contains("delete ")){
+            SqlUtils.notifyModelChanged(getPrimaryModelClass(), BaseModel.Action.DELETE, null);
+        } else if(mQuery.toLowerCase().contains("update ")){
+            SqlUtils.notifyModelChanged(getPrimaryModelClass(), BaseModel.Action.UPDATE, null);
+        }
+    }
 
-        private final Observer<? super T> mActual;
+    private class CompletableObservable implements CompletableObserver, Disposable {
+
+        private final CompletableObserver mActual;
         private final String mQuery;
         private final Class mModelClazz;
         private boolean mIsDisposed = false;
 
-        public NotifyOfUpdateObserver(Observer<? super T> observer, String query, Class modelClazz) {
+        public CompletableObservable(CompletableObserver observer, String query, Class modelClazz) {
             mActual = observer;
             mQuery = query;
             mModelClazz = modelClazz;
@@ -51,23 +61,18 @@ public class NotifyOfUpdate<T> extends Observable<T> implements HasUpstreamObser
         }
 
         @Override
-        public void onNext(T t) {
-            mActual.onNext(t);
-
-            if(mQuery.toLowerCase().contains("delete ")){
-                SqlUtils.notifyModelChanged(mModelClazz, BaseModel.Action.DELETE, null);
-            } else if(mQuery.toLowerCase().contains("update ")){
-                SqlUtils.notifyModelChanged(mModelClazz, BaseModel.Action.UPDATE, null);
-            }
-        }
-
-        @Override
         public void onError(Throwable e) {
             mActual.onError(e);
         }
 
         @Override
         public void onComplete() {
+            if(mQuery.toLowerCase().contains("delete ")){
+                SqlUtils.notifyModelChanged(mModelClazz, BaseModel.Action.DELETE, null);
+            } else if(mQuery.toLowerCase().contains("update ")){
+                SqlUtils.notifyModelChanged(mModelClazz, BaseModel.Action.UPDATE, null);
+            }
+
             mActual.onComplete();
         }
 
