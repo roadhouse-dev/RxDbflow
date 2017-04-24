@@ -5,9 +5,10 @@ import com.raizlabs.android.dbflow.sql.language.IndexedBy;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
-import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.sql.language.WhereBase;
+import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+
 /**
  * Constructs an Index By clause for a SQL query
  */
@@ -111,5 +112,4 @@ public class RxIndexedBy <TModel> implements WhereBase<TModel>, RxTransformable<
     public BaseModel.Action getPrimaryAction() {
         return mRealIndexedBy.getPrimaryAction();
     }
-
 }

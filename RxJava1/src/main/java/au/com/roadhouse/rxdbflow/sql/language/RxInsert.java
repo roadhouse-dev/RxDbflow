@@ -84,7 +84,7 @@ public class RxInsert<TModel> extends BaseQueriableObservable implements Query {
     }
 
     /**
-     * Uses the {@link SQLOperator} pairs to fill this insert query.
+     * Uses the {@link Condition} pairs to fill this insert query.
      *
      * @param conditions The conditions that we use to fill the columns and values of this INSERT
      */
@@ -94,12 +94,12 @@ public class RxInsert<TModel> extends BaseQueriableObservable implements Query {
     }
 
     /**
-     * Uses the {@link Condition} pairs to fill this insert query.
+     * Uses the {@link OperatorGroup} pairs to fill this insert query.
      *
-     * @param operationGroup The ConditionGroup to use
+     * @param conditionGroup The ConditionGroup to use
      */
-    public RxInsert<TModel> columnValues(OperatorGroup operationGroup) {
-        mRealInsert.columnValues(operationGroup);
+    public RxInsert<TModel> columnValues(OperatorGroup conditionGroup) {
+        mRealInsert.columnValues(conditionGroup);
         return this;
     }
 

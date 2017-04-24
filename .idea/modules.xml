@@ -3,8 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RxDBFlow.iml" filepath="$PROJECT_DIR$/RxDBFlow.iml" />
-      <module fileurl="file://$PROJECT_DIR$/RxJava2/library.iml" filepath="$PROJECT_DIR$/RxJava2/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RxJava1/library.iml" filepath="$PROJECT_DIR$/RxJava1/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RxJava2/RxJava2.iml" filepath="$PROJECT_DIR$/RxJava2/RxJava2.iml" />
       <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RxJava2/library.iml" filepath="$PROJECT_DIR$/RxJava2/library.iml" />
     </modules>
   </component>
 </project>

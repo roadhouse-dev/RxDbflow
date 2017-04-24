@@ -2,6 +2,7 @@ package au.com.roadhouse.rxdbflow.sql.language;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.sql.Query;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
@@ -11,11 +12,11 @@ import com.raizlabs.android.dbflow.sql.language.Set;
 import com.raizlabs.android.dbflow.sql.language.Where;
 import com.raizlabs.android.dbflow.sql.language.WhereBase;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteCompletable;
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowSingle;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowExecuteObservable;
+import rx.Observable;
 
 /**
  * Provides a set block for a select statement
@@ -116,11 +117,13 @@ public class RxSet<TModel> implements WhereBase<TModel>, QueriableObservable, Rx
         return mRealSet.getQuery();
     }
 
+    @NonNull
     @Override
     public Class<TModel> getTable() {
         return mRealSet.getTable();
     }
 
+    @NonNull
     @Override
     public Query getQueryBuilderBase() {
         return mRealSet.getQueryBuilderBase();
@@ -128,28 +131,28 @@ public class RxSet<TModel> implements WhereBase<TModel>, QueriableObservable, Rx
 
 
     @Override
-    public DBFlowSingle<Long> asCountSingle() {
-        return where().asCountSingle();
+    public Observable<Long> asCountObservable() {
+        return where().asCountObservable();
     }
 
     @Override
-    public DBFlowSingle<Long> asCountSingle(DatabaseWrapper databaseWrapper) {
-        return where().asCountSingle(databaseWrapper);
+    public Observable<Long> asCountObservable(DatabaseWrapper databaseWrapper) {
+        return where().asCountObservable(databaseWrapper);
     }
 
     @Override
-    public DBFlowExecuteCompletable asExecuteCompletable() {
-        return where().asExecuteCompletable();
+    public DBFlowExecuteObservable asExecuteObservable() {
+        return where().asExecuteObservable();
     }
 
     @Override
-    public DBFlowExecuteCompletable asExecuteCompletable(DatabaseWrapper databaseWrapper) {
-        return where().asExecuteCompletable(databaseWrapper);
+    public Observable<Void> asExecuteObservable(DatabaseWrapper databaseWrapper) {
+        return where().asExecuteObservable(databaseWrapper);
     }
 
     @Override
-    public DBFlowSingle<Cursor> asQuerySingle() {
-        return where().asQuerySingle();
+    public Observable<Cursor> asQueryObservable() {
+        return where().asQueryObservable();
     }
 
     @Override

@@ -15,6 +15,7 @@ public class RxJoin<TModel, TFromModel> implements Query {
     private Join<TModel, TFromModel> mRealJoin;
     private RxFrom<TFromModel> mRxFrom;
 
+
     RxJoin(RxFrom<TFromModel> from, Join<TModel, TFromModel> join){
         mRxFrom = from;
         mRealJoin = join;
@@ -24,6 +25,7 @@ public class RxJoin<TModel, TFromModel> implements Query {
     public String getQuery() {
         return mRealJoin.getQuery();
     }
+
 
     /**
      * Creates a "on" clause when joining two tables

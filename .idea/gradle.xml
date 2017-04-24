@@ -9,6 +9,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/RxJava1" />
             <option value="$PROJECT_DIR$/RxJava2" />
             <option value="$PROJECT_DIR$/example" />
           </set>

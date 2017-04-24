@@ -87,20 +87,20 @@ public class MainActivity extends AppCompatActivity {
                                 Log.e("TEST", "TestModel table has been cleared");
                             }
                         });
-//
-//        RxSQLite.delete(InheritanceTestModel.class)
-//                .asExecuteCompletable()
-//                .notifyOfUpdates()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(
-//                        new Action() {
-//                            @Override
-//                            public void run() throws Exception {
-//                                Log.e("TEST", "InheritanceTestModel table has been cleared");
-//                            }
-//                        }
-//                );
+
+        RxSQLite.delete(InheritanceTestModel.class)
+                .asExecuteCompletable()
+                .notifyOfUpdates()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action() {
+                            @Override
+                            public void run() throws Exception {
+                                Log.e("TEST", "InheritanceTestModel table has been cleared");
+                            }
+                        }
+                );
     }
 
     private void populateList() {

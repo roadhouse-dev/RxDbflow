@@ -1,6 +1,5 @@
 package au.com.roadhouse.rxdbflow.sql.language;
 
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.sql.Query;
@@ -17,7 +16,8 @@ import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.Model;
 
-import au.com.roadhouse.rxdbflow.sql.observables.DBFlowSingle;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCountObservable;
+import au.com.roadhouse.rxdbflow.sql.observables.DBFlowCursorObservable;
 
 /**
  * Constructs a From clause for a SQL query
@@ -134,7 +134,7 @@ public class RxFrom<TModel> extends BaseModelQueriableObservable<TModel> impleme
 
     /**
      * @param conditions The array of conditions that define this WHERE statement
-     * @return A {@link Where} statement with the specified array of {@link com.raizlabs.android.dbflow.sql.language.SQLOperator}.
+     * @return A {@link Where} statement with the specified array of {@link com.raizlabs.android.dbflow.sql.language.Condition}.
      */
     public RxWhere<TModel> where(SQLOperator... conditions) {
         return where().andAll(conditions);
@@ -234,13 +234,13 @@ public class RxFrom<TModel> extends BaseModelQueriableObservable<TModel> impleme
     }
 
     @Override
-    public DBFlowSingle<Cursor> asQuerySingle() {
-        return where().asQuerySingle();
+    public DBFlowCursorObservable asQueryObservable() {
+        return where().asQueryObservable();
     }
 
     @Override
-    public DBFlowSingle<Long> asCountSingle() {
-        return where().asCountSingle();
+    public DBFlowCountObservable<TModel> asCountObservable() {
+        return where().asCountObservable();
     }
 
     @Override
