@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.roadhouse-dev'
 
+project.ext.artifactId = "RxDbFlow-Rx2"
 
 android {
     compileSdkVersion 25
