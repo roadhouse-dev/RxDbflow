@@ -1,1 +1,1 @@
-include ':example', ':RxJava2', ':RxJava1'
+include ':exampleRx2', ':RxJava2', ':RxJava1', ':examplerx1'
