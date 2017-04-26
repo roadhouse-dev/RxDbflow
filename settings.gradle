@@ -1,1 +1,1 @@
-include ':example', ':library'
+include ':exampleRx2', ':RxDbFlow-Rx2', ':RxDbFlow-Rx1', ':exampleRx1'

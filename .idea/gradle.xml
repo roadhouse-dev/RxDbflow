@@ -9,8 +9,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/example" />
-            <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/RxDbFlow-Rx1" />
+            <option value="$PROJECT_DIR$/RxDbFlow-Rx2" />
+            <option value="$PROJECT_DIR$/exampleRx1" />
+            <option value="$PROJECT_DIR$/exampleRx2" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
