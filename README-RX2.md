@@ -17,22 +17,22 @@ public class TestModel extends RxBaseModel<TestModel> {
 
 
 ```java
-    model.saveAsObservable()
+    model.saveAsSingle()
         .subscribeOn(DBFlowSchedulers.background())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
         
-    model.insertAsObservable()
+    model.insertAsSingle()
         .subscribeOn(DBFlowSchedulers.background())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
         
-    model.deleteAsObservable()
+    model.deleteAsSingle()
          .subscribeOn(DBFlowSchedulers.background())
          .observeOn(AndroidSchedulers.mainThread())
          .subscribe();
         
-    model.updateAsObservable()
+    model.updateAsSingle()
          .subscribeOn(DBFlowSchedulers.background())
          .observeOn(AndroidSchedulers.mainThread())
          .subscribe();       
@@ -44,7 +44,7 @@ public class TestModel extends RxBaseModel<TestModel> {
 ```java
 RxSQLite.select()
     .from(Table.class)
-    .asListObservable()
+    .asListSingle()
     .subscribe(...)
 ```
 
@@ -54,38 +54,28 @@ RxSQLite.select()
 RxSQLite.select()
     .from(TableModel.class)
     .limit()
-    .asSingleObservable()
+    .asSingle()
     .subscribe(...) 
 ```
 
 ### Rerun query on table changes
-
+In this example the Single transforms into an Observable via restartOnChange()
 ```java
 RxSQLite.select()
     .from(TableModel.class)
-    .asSingleObservable()
+    .asSingle()
     .restartOnChange()
-    .subscribe(...)
-```
-
-### Automatically Unsubscribe after initial results
-
-```java
-//Do not use in conjunction with restartOnChange()
-RxSQLite.select()
-    .from(TableModel.class)
-    .asSingleObservable()
-    .completeOnResult()
     .subscribe(...)
 ```
 
 
 ### Rerun query on specific table changes
+This is particularly useful when dealing with views
 
 ```java
 RxSQLite.select()
     .from(ViewModel.class)
-    .asSingleObservable()
+    .asSingle()
     .restartOnChange(TableModelOne.class, TableModelTwo.class)
     .subscribe(...)
 ```
@@ -95,23 +85,23 @@ RxSQLite.select()
 Retrieve result as a Cursor
 
 ```java
-.asResultsObservable() 
+.asResultSingle() 
 ```
 Retrieve result as a FlowQueryList
 ```java
-.asQueryListObservable()
+.asQueryListSingle()
 ```
 
 
 Retrieve a single QueryModel
 ```java
-.asCustomSingleObservable(QueryModel.class)
+.asCustomSingle(QueryModel.class)
 ```
 
 
 Retrieve results as a list of QueryModel
 ```java
-.asCustomListObservable(QueryModel.class)
+.asCustomListSingle(QueryModel.class)
 ```
 
 
@@ -140,7 +130,8 @@ RxSQLite.update(TestModel.class)
 
 ## Transactions
 
-RxDBFlow provides two easy to use transaction observable structures, depending what type of operations are being performed in the transaction:
+RxDBFlow adds to DBFlow's transaction handling by providing two easy to use transaction observable structures, 
+depending what type of operations are being performed in the transaction:
 
 ### RxGenericTransactionBlock
 Wraps any type of database operations within a transaction

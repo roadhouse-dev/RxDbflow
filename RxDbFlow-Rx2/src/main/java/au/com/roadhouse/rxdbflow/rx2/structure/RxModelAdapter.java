@@ -12,7 +12,7 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 
 public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
@@ -257,14 +257,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     }
 
     /**
-     * Returns an observable for saving the object in the database
-     * @return An observable
+     * Returns an Single for saving the object in the database
+     * @return An Single
      */
-    public Observable<TModel> saveAsObservable(final TModel model) {
-        return Observable.defer(new Callable<Observable<TModel>>() {
+    public Single<TModel> saveAsSingle(final TModel model) {
+        return Single.defer(new Callable<Single<TModel>>() {
             @Override
-            public Observable<TModel> call() {
-                return Observable.fromCallable(new Callable<TModel>() {
+            public Single<TModel> call() {
+                return Single.fromCallable(new Callable<TModel>() {
                     @Override
                     public TModel call() throws Exception {
                         save(model);
@@ -276,14 +276,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     }
 
     /**
-     * Returns an observable for saving the object in the database
-     * @return An observable
+     * Returns an Single for saving the object in the database
+     * @return An Single
      */
-    public Observable<TModel> saveAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
-        return Observable.defer(new Callable<Observable<TModel>>() {
+    public Single<TModel> saveAsSingle(final TModel model, final DatabaseWrapper databaseWrapper) {
+        return Single.defer(new Callable<Single<TModel>>() {
             @Override
-            public Observable<TModel> call() {
-                return Observable.fromCallable(new Callable<TModel>() {
+            public Single<TModel> call() {
+                return Single.fromCallable(new Callable<TModel>() {
                     @Override
                     public TModel call() throws Exception {
                         save(model, databaseWrapper);
@@ -295,14 +295,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     }
 
     /**
-     * Returns an observable for inserting the object in the database
-     * @return An observable
+     * Returns an Single for inserting the object in the database
+     * @return An Single
      */
-    public Observable<TModel> insertAsObservable(final TModel model) {
-        return Observable.defer(new Callable<Observable<TModel>>() {
+    public Single<TModel> insertAsSingle(final TModel model) {
+        return Single.defer(new Callable<Single<TModel>>() {
             @Override
-            public Observable<TModel> call() {
-                return Observable.fromCallable(new Callable<TModel>() {
+            public Single<TModel> call() {
+                return Single.fromCallable(new Callable<TModel>() {
                     @Override
                     public TModel call() throws Exception {
                         insert(model);
@@ -314,14 +314,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     }
 
     /**
-     * Returns an observable for inserting the object in the database
-     * @return An observable
+     * Returns an Single for inserting the object in the database
+     * @return An Single
      */
-    public Observable<TModel> insertAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
-        return Observable.defer(new Callable<Observable<TModel>>() {
+    public Single<TModel> insertAsSingle(final TModel model, final DatabaseWrapper databaseWrapper) {
+        return Single.defer(new Callable<Single<TModel>>() {
             @Override
-            public Observable<TModel> call() {
-                return Observable.fromCallable(new Callable<TModel>() {
+            public Single<TModel> call() {
+                return Single.fromCallable(new Callable<TModel>() {
                     @Override
                     public TModel call() throws Exception {
                         insert(model, databaseWrapper);
@@ -333,14 +333,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     }
 
     /**
-     * Returns an observable for deleting the object from the database
-     * @return An observable
+     * Returns an Single for deleting the object from the database
+     * @return An Single
      */
-    public Observable<TModel> deleteAsObservable(final TModel model) {
-        return Observable.defer(new Callable<Observable<TModel>>() {
+    public Single<TModel> deleteAsSingle(final TModel model) {
+        return Single.defer(new Callable<Single<TModel>>() {
             @Override
-            public Observable<TModel> call() {
-                return Observable.fromCallable(new Callable<TModel>() {
+            public Single<TModel> call() {
+                return Single.fromCallable(new Callable<TModel>() {
                     @Override
                     public TModel call() throws Exception {
                         delete(model);
@@ -352,14 +352,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     }
 
     /**
-     * Returns an observable for deleting the object from the database
-     * @return An observable
+     * Returns an Single for deleting the object from the database
+     * @return An Single
      */
-    public Observable<TModel> deleteAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
-        return Observable.defer(new Callable<Observable<TModel>>() {
+    public Single<TModel> deleteAsSingle(final TModel model, final DatabaseWrapper databaseWrapper) {
+        return Single.defer(new Callable<Single<TModel>>() {
             @Override
-            public Observable<TModel> call() {
-                return Observable.fromCallable(new Callable<TModel>() {
+            public Single<TModel> call() {
+                return Single.fromCallable(new Callable<TModel>() {
                     @Override
                     public TModel call() throws Exception {
                         delete(model, databaseWrapper);
@@ -371,14 +371,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     }
 
     /**
-     * Returns an observable for update the object in the database
-     * @return An observable
+     * Returns an Single for update the object in the database
+     * @return An Single
      */
-    public Observable<TModel> updateAsObservable(final TModel model) {
-        return Observable.defer(new Callable<Observable<TModel>>() {
+    public Single<TModel> updateAsSingle(final TModel model) {
+        return Single.defer(new Callable<Single<TModel>>() {
             @Override
-            public Observable<TModel> call() {
-                return Observable.fromCallable(new Callable<TModel>() {
+            public Single<TModel> call() {
+                return Single.fromCallable(new Callable<TModel>() {
                     @Override
                     public TModel call() throws Exception {
                         update(model);
@@ -390,14 +390,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     }
 
     /**
-     * Returns an observable for update the object in the database
-     * @return An observable
+     * Returns an Single for update the object in the database
+     * @return An Single
      */
-    public Observable<TModel> updateAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
-        return Observable.defer(new Callable<Observable<TModel>>() {
+    public Single<TModel> updateAsSingle(final TModel model, final DatabaseWrapper databaseWrapper) {
+        return Single.defer(new Callable<Single<TModel>>() {
             @Override
-            public Observable<TModel> call() {
-                return Observable.fromCallable(new Callable<TModel>() {
+            public Single<TModel> call() {
+                return Single.fromCallable(new Callable<TModel>() {
                     @Override
                     public TModel call() throws Exception {
                         update(model, databaseWrapper);
@@ -409,14 +409,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     }
 
     /**
-     * Returns an observable for update the object in the database
-     * @return An observable
+     * Returns an Single for update the object in the database
+     * @return An Single
      */
-    public Observable<TModel> loadAsObservable(final TModel model) {
-        return Observable.defer(new Callable<Observable<TModel>>() {
+    public Single<TModel> loadAsSingle(final TModel model) {
+        return Single.defer(new Callable<Single<TModel>>() {
             @Override
-            public Observable<TModel> call() {
-                return Observable.fromCallable(new Callable<TModel>() {
+            public Single<TModel> call() {
+                return Single.fromCallable(new Callable<TModel>() {
                     @Override
                     public TModel call() throws Exception {
                         load(model);
@@ -428,14 +428,14 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     }
 
     /**
-     * Returns an observable which will refresh the model's data based on the primary key when subscribed.
-     * @return An observable
+     * Returns an Single which will refresh the model's data based on the primary key when subscribed.
+     * @return An Single
      */
-    public Observable<TModel> loadAsObservable(final TModel model, final DatabaseWrapper databaseWrapper) {
-        return Observable.defer(new Callable<Observable<TModel>>() {
+    public Single<TModel> loadAsSingle(final TModel model, final DatabaseWrapper databaseWrapper) {
+        return Single.defer(new Callable<Single<TModel>>() {
             @Override
-            public Observable<TModel> call() {
-                return Observable.fromCallable(new Callable<TModel>() {
+            public Single<TModel> call() {
+                return Single.fromCallable(new Callable<TModel>() {
                     @Override
                     public TModel call() throws Exception {
                         load(model, databaseWrapper);

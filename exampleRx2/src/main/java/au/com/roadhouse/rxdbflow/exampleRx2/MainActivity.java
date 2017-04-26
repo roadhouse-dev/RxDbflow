@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         modelOne.setLastName("Don");
 
         RxModelAdapter.getModelAdapter(TestModel.class)
-                .insertAsObservable(modelOne)
+                .insertAsSingle(modelOne)
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<TestModel>() {
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         RxModelAdapter.getModelAdapter(TestModel.class)
-                .insertAsObservable(modelTwo)
+                .insertAsSingle(modelTwo)
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<TestModel>() {
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         RxModelAdapter.getModelAdapter(TestModel.class)
-                .insertAsObservable(modelThree)
+                .insertAsSingle(modelThree)
                 .subscribeOn(DBFlowSchedulers.background())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<TestModel>() {

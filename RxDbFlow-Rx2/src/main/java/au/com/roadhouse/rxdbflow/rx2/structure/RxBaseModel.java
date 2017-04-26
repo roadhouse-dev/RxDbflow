@@ -7,10 +7,10 @@ import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import au.com.roadhouse.rxdbflow.rx2.RxDbFlow;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
- * A DBFlow BaseModel implementation which provides observables for saving, updating, inserting, and
+ * A DBFlow BaseModel implementation which provides Singles for saving, updating, inserting, and
  * deleting operations.
  */
 @SuppressWarnings("unchecked")
@@ -19,89 +19,89 @@ public class RxBaseModel<M extends RxBaseModel> extends BaseModel implements RxM
     private transient RxModelAdapter<? extends RxBaseModel> mModelAdapter;
 
     /**
-     * Returns an observable for saving the object in the database
-     * @return An observable
+     * Returns an Single for saving the object in the database
+     * @return An Single
      */
-    public Observable<M> saveAsObservable(){
-        return getRxModelAdapter().saveAsObservable(this);
+    public Single<M> saveAsSingle(){
+        return getRxModelAdapter().saveAsSingle(this);
     }
 
     /**
-     * Returns an observable for saving the object in the database
+     * Returns an Single for saving the object in the database
      * @param databaseWrapper The database wrapper for the database holding the table
-     * @return An observable
+     * @return An Single
      */
     @SuppressWarnings("unchecked")
-    public Observable<M> saveAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return getRxModelAdapter().saveAsObservable(this, databaseWrapper);
+    public Single<M> saveAsSingle(@Nullable final DatabaseWrapper databaseWrapper){
+        return getRxModelAdapter().saveAsSingle(this, databaseWrapper);
     }
 
     /**
-     * Returns an observable for inserting the object in the database
-     * @return An observable
+     * Returns an Single for inserting the object in the database
+     * @return An Single
      */
-    public Observable<M> insertAsObservable(){
-        return getRxModelAdapter().insertAsObservable(this);
+    public Single<M> insertAsSingle(){
+        return getRxModelAdapter().insertAsSingle(this);
     }
 
     /**
-     * Returns an observable for inserting the object in the database
+     * Returns an Single for inserting the object in the database
      * @param databaseWrapper The database wrapper for the database holding the table
-     * @return An observable
+     * @return An Single
      */
-    public Observable<M> insertAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return getRxModelAdapter().insertAsObservable(this, databaseWrapper);
+    public Single<M> insertAsSingle(@Nullable final DatabaseWrapper databaseWrapper){
+        return getRxModelAdapter().insertAsSingle(this, databaseWrapper);
     }
 
     /**
-     * Returns an observable for deleting the object from the database
-     * @return An observable
+     * Returns an Single for deleting the object from the database
+     * @return An Single
      */
-    public Observable<M> deleteAsObservable(){
-        return getRxModelAdapter().deleteAsObservable(this);
+    public Single<M> deleteAsSingle(){
+        return getRxModelAdapter().deleteAsSingle(this);
     }
 
     /**
-     * Returns an observable for deleting the object from the database
+     * Returns an Single for deleting the object from the database
      * @param databaseWrapper The database wrapper for the database holding the table
-     * @return An observable
+     * @return An Single
      */
-    public Observable<M> deleteAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return getRxModelAdapter().deleteAsObservable(this, databaseWrapper);
+    public Single<M> deleteAsSingle(@Nullable final DatabaseWrapper databaseWrapper){
+        return getRxModelAdapter().deleteAsSingle(this, databaseWrapper);
     }
 
     /**
-     * Returns an observable for update the object in the database
-     * @return An observable
+     * Returns an Single for update the object in the database
+     * @return An Single
      */
-    public Observable<M> updateAsObservable(){
-        return getRxModelAdapter().updateAsObservable(this);
+    public Single<M> updateAsSingle(){
+        return getRxModelAdapter().updateAsSingle(this);
     }
 
     /**
-     * Returns an observable for update in object from the database
+     * Returns an Single for update in object from the database
      * @param databaseWrapper The database wrapper for the database holding the table
-     * @return An observable
+     * @return An Single
      */
-    public Observable<M> updateAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return getRxModelAdapter().updateAsObservable(this, databaseWrapper);
+    public Single<M> updateAsSingle(@Nullable final DatabaseWrapper databaseWrapper){
+        return getRxModelAdapter().updateAsSingle(this, databaseWrapper);
     }
 
     /**
-     * Returns an observable which will refresh the model's data based on the primary key when subscribed.
-     * @return An observable
+     * Returns an Single which will refresh the model's data based on the primary key when subscribed.
+     * @return An Single
      */
-    public Observable<M> loadAsObservable(){
-        return getRxModelAdapter().loadAsObservable(this);
+    public Single<M> loadAsSingle(){
+        return getRxModelAdapter().loadAsSingle(this);
     }
 
     /**
-     * Returns an observable which will refresh the model's data based on the primary key when subscribed.
+     * Returns an Single which will refresh the model's data based on the primary key when subscribed.
      * @param databaseWrapper The database wrapper for the database holding the table
-     * @return An observable
+     * @return An Single
      */
-    public Observable<M> loadAsObservable(@Nullable final DatabaseWrapper databaseWrapper){
-        return getRxModelAdapter().loadAsObservable(this, databaseWrapper);
+    public Single<M> loadAsSingle(@Nullable final DatabaseWrapper databaseWrapper){
+        return getRxModelAdapter().loadAsSingle(this, databaseWrapper);
     }
 
     /**

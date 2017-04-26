@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 
 /**
@@ -13,19 +13,19 @@ import io.reactivex.Observable;
  */
 public interface RxModifications<TModel extends RxBaseModel> {
 
-    Observable<TModel> saveAsObservable();
+    Single<TModel> saveAsSingle();
 
-    Observable<TModel> saveAsObservable(@Nullable DatabaseWrapper databaseWrapper);
+    Single<TModel> saveAsSingle(@Nullable DatabaseWrapper databaseWrapper);
 
-    Observable<TModel> insertAsObservable();
+    Single<TModel> insertAsSingle();
 
-    Observable<TModel> insertAsObservable(@Nullable DatabaseWrapper databaseWrapper);
+    Single<TModel> insertAsSingle(@Nullable DatabaseWrapper databaseWrapper);
 
-    Observable<TModel> deleteAsObservable();
+    Single<TModel> deleteAsSingle();
 
-    Observable<TModel> deleteAsObservable(@Nullable DatabaseWrapper databaseWrapper);
+    Single<TModel> deleteAsSingle(@Nullable DatabaseWrapper databaseWrapper);
 
-    Observable<TModel> updateAsObservable();
+    Single<TModel> updateAsSingle();
 
-    Observable<TModel> updateAsObservable(@Nullable DatabaseWrapper databaseWrapper);
+    Single<TModel> updateAsSingle(@Nullable DatabaseWrapper databaseWrapper);
 }
