@@ -6,9 +6,10 @@
       <module fileurl="file://$PROJECT_DIR$/RxJava1/RxJava1.iml" filepath="$PROJECT_DIR$/RxJava1/RxJava1.iml" />
       <module fileurl="file://$PROJECT_DIR$/RxJava2/RxJava2.iml" filepath="$PROJECT_DIR$/RxJava2/RxJava2.iml" />
       <module fileurl="file://$PROJECT_DIR$/exampleRx2/example.iml" filepath="$PROJECT_DIR$/exampleRx2/example.iml" />
-      <module fileurl="file://$PROJECT_DIR$/examplerx1/examplerx1.iml" filepath="$PROJECT_DIR$/examplerx1/examplerx1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/RxJava1/library.iml" filepath="$PROJECT_DIR$/RxJava1/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/exampleRx1/examplerx1.iml" filepath="$PROJECT_DIR$/exampleRx1/examplerx1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/exampleRx2/exampleRx2.iml" filepath="$PROJECT_DIR$/exampleRx2/exampleRx2.iml" />
       <module fileurl="file://$PROJECT_DIR$/RxJava2/library.iml" filepath="$PROJECT_DIR$/RxJava2/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RxJava1/library.iml" filepath="$PROJECT_DIR$/RxJava1/library.iml" />
     </modules>
   </component>
 </project>

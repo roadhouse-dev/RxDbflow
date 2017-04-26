@@ -10,14 +10,14 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.List;
 
-import au.com.roadhouse.rxdbflow.DBFlowSchedulers;
+import au.com.roadhouse.rxdbflow.rx2.DBFlowSchedulers;
 import au.com.roadhouse.rxdbflow.exampleRx2.model.InheritanceTestModel;
 import au.com.roadhouse.rxdbflow.exampleRx2.model.TestModel;
-import au.com.roadhouse.rxdbflow.sql.language.NullValue;
-import au.com.roadhouse.rxdbflow.sql.language.RxSQLite;
-import au.com.roadhouse.rxdbflow.sql.transaction.RxGenericTransactionBlock;
-import au.com.roadhouse.rxdbflow.sql.transaction.RxModelOperationTransaction;
-import au.com.roadhouse.rxdbflow.structure.RxModelAdapter;
+import au.com.roadhouse.rxdbflow.rx2.sql.language.NullValue;
+import au.com.roadhouse.rxdbflow.rx2.sql.language.RxSQLite;
+import au.com.roadhouse.rxdbflow.rx2.sql.transaction.RxGenericTransactionBlock;
+import au.com.roadhouse.rxdbflow.rx2.sql.transaction.RxModelOperationTransaction;
+import au.com.roadhouse.rxdbflow.rx2.structure.RxModelAdapter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;

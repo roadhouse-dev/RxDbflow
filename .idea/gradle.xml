@@ -11,8 +11,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/RxJava1" />
             <option value="$PROJECT_DIR$/RxJava2" />
+            <option value="$PROJECT_DIR$/exampleRx1" />
             <option value="$PROJECT_DIR$/exampleRx2" />
-            <option value="$PROJECT_DIR$/examplerx1" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

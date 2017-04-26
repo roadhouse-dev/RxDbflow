@@ -1,0 +1,64 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+    defaultConfig {
+        applicationId "au.com.roadhouse.rxdbflow.exampleRx1"
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 2
+        versionName "1.0.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+
+task(type: Zip, "zipTestReport") {
+    from("${rootDir.absolutePath}/example/build/reports/androidTests/connected/")
+    archiveName 'test_report_example.zip'
+    destinationDir file("${rootDir.absolutePath}/app/build/reports/")
+}
+
+configure(zipTestReport) {
+    group = 'verification'
+    description = 'Create a test report archive'
+}
+
+task(type: Zip, "zipLintReport") {
+    from "${rootDir.absolutePath}/example/build/outputs/"
+    include "lint-results-debug.html"
+    include "lint-results-debug_files/*"
+    archiveName 'lint_report_example.zip'
+    destinationDir file("${rootDir.absolutePath}/example/build/reports/")
+}
+
+configure(zipLintReport) {
+    group = 'verification'
+    description = 'Create a lint report archive'
+}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'io.reactivex:rxjava:1.1.4'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.github.Raizlabs.DBFlow:dbflow-core:4.0.0-beta7'
+    compile 'com.github.Raizlabs.DBFlow:dbflow:4.0.0-beta7'
+    compile 'com.android.support:design:25.3.1'
+    apt 'com.github.Raizlabs.DBFlow:dbflow-processor:4.0.0-beta7'
+    compile project(path: ':RxJava1')
+    testCompile 'junit:junit:4.12'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+}

@@ -30,6 +30,17 @@ allprojects {
 Add the dependencies:
 ```groovy
 dependencies {
+    apt 'com.github.Raizlabs.DBFlow:dbflow-processor:4.0.0-beta7'
+    compile 'com.github.Raizlabs.DBFlow:dbflow-core:4.0.0-beta7'
+    compile 'com.github.Raizlabs.DBFlow:dbflow:4.0.0-beta7'
+    compile 'com.github.roadhouse-dev:RxDbflow:<Version>'
+}
+```
+
+or 
+
+```groovy
+dependencies {
     apt 'com.github.Raizlabs.DBFlow:dbflow-processor:3.1.1'
     compile 'com.github.Raizlabs.DBFlow:dbflow-core:3.1.1'
     compile 'com.github.Raizlabs.DBFlow:dbflow:3.1.1'

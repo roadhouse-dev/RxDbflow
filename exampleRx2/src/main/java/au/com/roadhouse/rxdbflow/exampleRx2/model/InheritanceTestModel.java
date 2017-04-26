@@ -6,7 +6,7 @@ import com.raizlabs.android.dbflow.annotation.ConflictAction;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
-import au.com.roadhouse.rxdbflow.structure.RxBaseModel;
+import au.com.roadhouse.rxdbflow.rx2.structure.RxBaseModel;
 
 @Table(database = ExampleDatabase.class, name = InheritanceTestModel.NAME, insertConflict = ConflictAction.REPLACE)
 public class InheritanceTestModel extends RxBaseModel<InheritanceTestModel> {
