@@ -1,6 +1,6 @@
 
 
-# RxDBFlow-Rx1 Sample Usage
+# RxDBFlow-Rx2 Sample Usage
 RxJava bindings for DBFlow models, and query language
 
 
