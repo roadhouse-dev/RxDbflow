@@ -4,7 +4,7 @@
 RxJava bindings for DBFlow models, and query language
 
 
-##RxBaseModel
+## RxBaseModel
 RxBaseModel is an extension of BaseModel and provides RxJava extensions for individual model operations 
 
 ```java
@@ -38,9 +38,9 @@ public class TestModel extends RxBaseModel<TestModel> {
          .subscribe();       
 ```
 
-##Queries
+## Queries
 
-###List observable
+### List observable
 ```java
 RxSQLite.select()
     .from(Table.class)
@@ -48,7 +48,7 @@ RxSQLite.select()
     .subscribe(...)
 ```
 
-###Single model observable
+### Single model observable
 
 ```java
 RxSQLite.select()
@@ -58,7 +58,7 @@ RxSQLite.select()
     .subscribe(...) 
 ```
 
-###Rerun query on table changes
+### Rerun query on table changes
 
 ```java
 RxSQLite.select()
@@ -68,7 +68,7 @@ RxSQLite.select()
     .subscribe(...)
 ```
 
-###Automatically Unsubscribe after initial results
+### Automatically Unsubscribe after initial results
 
 ```java
 //Do not use in conjunction with restartOnChange()
@@ -80,7 +80,7 @@ RxSQLite.select()
 ```
 
 
-###Rerun query on specific table changes
+### Rerun query on specific table changes
 
 ```java
 RxSQLite.select()
@@ -91,7 +91,7 @@ RxSQLite.select()
 ```
 
 
-###Other observables 
+### Other observables 
 Retrieve result as a Cursor
 
 ```java
@@ -116,7 +116,7 @@ Retrieve results as a list of QueryModel
 
 
 
-##CRUD Operations
+## CRUD Operations
 
 As of DBFlow 3.1.1 the following will not trigger any onChange listeners
 ```java
@@ -138,11 +138,11 @@ RxSQLite.update(TestModel.class)
                 .subscribe();
  ```
 
-##Transactions
+## Transactions
 
 RxDBFlow provides two easy to use transaction observable structures, depending what type of operations are being performed in the transaction:
 
-###RxGenericTransactionBlock
+### RxGenericTransactionBlock
 Wraps any type of database operations within a transaction
 
 ```java

@@ -4,7 +4,7 @@
 # RxDBFlow
 RxJava bindings for DBFlow models, and query language
 
-#Download
+# Download
 
 Add the JitPack repository to your root build file
 
@@ -50,36 +50,36 @@ dependencies {
 
 At the moment only DBFlow version 4.0.0-beta7 is supported
 
-#Build
+# Build
 ```bash
 $ git clone https://github.com/roadhouse-dev/RxDbflow.git
 $ ./gradlew build
 ```
 
-#DBFlow documentation
+# DBFlow documentation
 For help with DBFlow please take a look at [DBFlow GitHub](https://github.com/Raizlabs/DBFlow)
 
-#Scheduler
+# Scheduler
 RxDBFlow now comes with it's own scheduler (DBFlowSchedulers.background()), this is a single threaded scheduler that will ensure
 all database operations happen from the same background thread. Using a multi-threaded scheduler like Schedulers.io() can cause deadlocks.
 
 
-#Sample usage
+# Sample usage
 There are slight differences between rx1 and rx2
 
-#Rx1 Sample usage
+# Rx1 Sample usage
 [View here](README-RX1.md)
 
-#Rx2 Sample usage
+# Rx2 Sample usage
 [View here](README-RX2.md)
 
 
-#Bugs and Feedback
+# Bugs and Feedback
 For RxDBFlow bugs, questions and discussions please use the [GitHub Issues](https://github.com/roadhouse-dev/RxDbflow/issues).
 
 For DBFlow specific bugs, questions and discussions please use the [GitHub Issues](https://github.com/Raizlabs/DBFlow/issues).
 
-#Pull Requests
+# Pull Requests
 All pull requests are welcome, however to make the whole process smoother please use the following guides
 
 * All pull requests should be against the ```develop``` branch
