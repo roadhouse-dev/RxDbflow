@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
         insertWithModelOperations();
         insertWithGenericTransactionBlock();
         insertWithModelOperationTransaction();
+
+        RxSQLite.select().from(TestModel.class).asListSingle().toObservable().subscribe();
     }
 
     private void insertWithModelOperations() {

@@ -33,7 +33,6 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
     protected void subscribeActual(Observer<? super T> observer) {
         final RestartOnChangeObserver<T> disposable = new RestartOnChangeObserver<T>(observer, mSubscribedClasses, mRestartAction);
         mSource.subscribe(disposable);
-        observer.onSubscribe(disposable);
     }
 
     @Override
