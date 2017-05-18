@@ -14,6 +14,8 @@ import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowCursorListSingle;
 import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowCustomListSingle;
 import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowCustomModelSingle;
 import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowListSingle;
+import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowMaybe;
+import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowModelMaybe;
 import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowModelSingle;
 import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowQueryListSingle;
 import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowResultSingle;
@@ -32,6 +34,11 @@ public class BaseModelQueriableObservable<TModel> extends BaseQueriableObservabl
     @Override
     public DBFlowSingle<TModel> asSingle() {
         return new DBFlowModelSingle<TModel>(mRealModelQueriable.getTable(), mRealModelQueriable, null);
+    }
+
+    @Override
+    public DBFlowMaybe<TModel> asMaybe() {
+        return new DBFlowModelMaybe<TModel>(mRealModelQueriable.getTable(), mRealModelQueriable, null);
     }
 
     @Override

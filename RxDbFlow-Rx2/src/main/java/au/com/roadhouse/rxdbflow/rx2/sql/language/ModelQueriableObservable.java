@@ -8,6 +8,7 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.List;
 
+import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowMaybe;
 import au.com.roadhouse.rxdbflow.rx2.sql.observables.DBFlowSingle;
 
 
@@ -19,6 +20,13 @@ public interface ModelQueriableObservable<TModel> extends QueriableObservable {
      * @return An Single that emits a single model
      */
     DBFlowSingle<TModel> asSingle();
+
+    /**
+     * Creates an Maybe that emits a single model or null from a query. This will be the first record
+     * returned by the query or null if the query was empty.
+     * @return An Single that emits a single model
+     */
+    DBFlowMaybe<TModel> asMaybe();
 
     /**
      * Creates an Single that emits a single model from a query. This will be the first record
