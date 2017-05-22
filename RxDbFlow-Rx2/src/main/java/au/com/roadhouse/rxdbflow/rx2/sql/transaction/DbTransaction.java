@@ -22,7 +22,7 @@ public class DbTransaction {
     }
 
     public static void registerDbTransactionListener(Class tableClass, OnDbTransactionListener listener){
-        String databaseName = FlowManager.getDatabase(tableClass).getDatabaseName();
+        String databaseName = FlowManager.getDatabaseForTable(tableClass).getDatabaseName();
         if(sTransactionListenerMap.containsKey(databaseName)){
             sTransactionListenerMap.get(databaseName).add(listener);
         } else {
@@ -33,7 +33,7 @@ public class DbTransaction {
     }
 
     public static void unregisterDbTransactionListener(Class tableClass, OnDbTransactionListener listener) {
-        String databaseName = FlowManager.getDatabase(tableClass).getDatabaseName();
+        String databaseName = FlowManager.getDatabaseForTable(tableClass).getDatabaseName();
         if(sTransactionListenerMap.containsKey(databaseName)){
             sTransactionListenerMap.get(databaseName).remove(databaseName);
             if(sTransactionListenerMap.get(databaseName).size() == 0){
@@ -47,7 +47,7 @@ public class DbTransaction {
 
     public void beginTransaction(){
         FlowManager.getDatabase(mClass).getWritableDatabase().beginTransaction();
-        String databaseName = FlowManager.getDatabase(mClass).getDatabaseName();
+        String databaseName = FlowManager.getDatabaseForTable(mClass).getDatabaseName();
         if(sTransactionListenerMap.containsKey(databaseName)){
             List<OnDbTransactionListener> listenerList = sTransactionListenerMap.get(databaseName);
             for(int i = 0; i < listenerList.size(); i++){
@@ -62,7 +62,7 @@ public class DbTransaction {
 
     public void endTransaction() {
         FlowManager.getDatabase(mClass).getWritableDatabase().endTransaction();
-        String databaseName = FlowManager.getDatabase(mClass).getDatabaseName();
+        String databaseName = FlowManager.getDatabaseForTable(mClass).getDatabaseName();
         if(sTransactionListenerMap.containsKey(databaseName)){
             List<OnDbTransactionListener> listenerList = sTransactionListenerMap.get(databaseName);
             for(int i = 0; i < listenerList.size(); i++){
