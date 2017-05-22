@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
+import com.raizlabs.android.dbflow.runtime.OnTableChangedListener;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.Arrays;
@@ -82,7 +83,7 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
             }
 
             mFlowContentObserver.addOnTableChangedListener(
-                    new FlowContentObserver.OnTableChangedListener() {
+                    new OnTableChangedListener() {
                         @Override
                         public void onTableChanged(@Nullable Class<?> tableChanged, BaseModel.Action action) {
                             if(isDisposed()){

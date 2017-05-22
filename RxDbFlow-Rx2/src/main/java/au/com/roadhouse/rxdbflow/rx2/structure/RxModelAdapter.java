@@ -2,6 +2,7 @@ package au.com.roadhouse.rxdbflow.rx2.structure;
 
 import android.content.ContentValues;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.structure.InternalAdapter;
@@ -213,6 +214,16 @@ public class RxModelAdapter<TModel> implements InternalAdapter<TModel> {
     @Override
     public void bindToInsertValues(ContentValues contentValues, TModel tModel) {
         mModelAdapter.bindToInsertValues(contentValues, tModel);
+    }
+
+    @Override
+    public void bindToUpdateStatement(@NonNull DatabaseStatement updateStatement, @NonNull TModel tModel) {
+        mModelAdapter.bindToUpdateStatement(updateStatement, tModel);
+    }
+
+    @Override
+    public void bindToDeleteStatement(@NonNull DatabaseStatement deleteStatement, @NonNull TModel tModel) {
+        mModelAdapter.bindToDeleteStatement(deleteStatement, tModel);
     }
 
     /**
