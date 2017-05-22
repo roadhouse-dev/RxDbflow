@@ -1,7 +1,6 @@
 package au.com.roadhouse.rxdbflow.rx2.sql.observables.operators;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
@@ -11,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import au.com.roadhouse.rxdbflow.rx2.sql.observables.functions.ValueAction;
+import au.com.roadhouse.rxdbflow.rx2.sql.transaction.DbTransaction;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
@@ -40,17 +40,21 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
         return mSource;
     }
 
-    private class RestartOnChangeObserver<T> implements Observer<T>, Disposable {
+    private class RestartOnChangeObserver<T> implements Observer<T>, Disposable, DbTransaction.OnDbTransactionListener {
         private final Observer<? super T> mActual;
         private final ValueAction<T> mRestartAction;
         private List<Class> mSubscribedClasses;
         private boolean mIsDisposed = false;
         private FlowContentObserver mFlowContentObserver = new FlowContentObserver();
+        private boolean mIsInTransaction = false;
+        private boolean mHasPendingChange = false;
+
 
         public RestartOnChangeObserver(Observer<? super T> observer, Class[] subscribedClasses, ValueAction<T> action) {
             mActual = observer;
             mSubscribedClasses = Arrays.asList(subscribedClasses);
             mRestartAction = action;
+            DbTransaction.registerDbTransactionListener(mSubscribedClasses.get(0), this);
         }
 
         @Override
@@ -66,7 +70,6 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
 
         @Override
         public void onComplete() {
-            Log.e("TEST", "OnComplete called and swallowed");
             //We capture any completes here to avoid disposing
         }
 
@@ -82,8 +85,14 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
                     new FlowContentObserver.OnTableChangedListener() {
                         @Override
                         public void onTableChanged(@Nullable Class<?> tableChanged, BaseModel.Action action) {
-                            if (!isDisposed()) {
+                            if(isDisposed()){
+                                return;
+                            }
+
+                            if (!mIsInTransaction) {
                                 mActual.onNext(mRestartAction.run());
+                            } else {
+                                mHasPendingChange = true;
                             }
                         }
                     });
@@ -94,11 +103,26 @@ public class DBFlowRestartOnChange<T> extends Observable<T> implements HasUpstre
             mFlowContentObserver.unregisterForContentChanges(FlowManager.getContext());
             mIsDisposed = true;
             mActual.onComplete();
+            DbTransaction.unregisterDbTransactionListener(mSubscribedClasses.get(0), this);
         }
 
         @Override
         public boolean isDisposed() {
             return mIsDisposed;
+        }
+
+        @Override
+        public void onTransactionStarted() {
+            mIsInTransaction = true;
+        }
+
+        @Override
+        public void onTransactionEnded() {
+            mIsInTransaction = false;
+            if(mHasPendingChange && !isDisposed()){
+                mHasPendingChange = false;
+                mActual.onNext(mRestartAction.run());
+            }
         }
     }
 }
