@@ -44,4 +44,9 @@ public class RxJoin<TModel, TFromModel> implements Query {
         mRealJoin.using(columns);
         return mRxFrom;
     }
+
+    public RxFrom<TFromModel> as(String as){
+        mRealJoin.as(as);
+        return mRxFrom;
+    }
 }
