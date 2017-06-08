@@ -45,8 +45,8 @@ public class RxJoin<TModel, TFromModel> implements Query {
         return mRxFrom;
     }
 
-    public RxFrom<TFromModel> as(String as){
+    public RxJoin<TModel, TFromModel> as(String as){
         mRealJoin.as(as);
-        return mRxFrom;
+        return this;
     }
 }
