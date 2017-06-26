@@ -24,11 +24,22 @@ public class RxWhere<TModel> extends BaseModelQueriableObservable<TModel>
      * Adds a param to the WHERE clause with the custom {@link SQLOperator}
      *
      * @param condition The {@link SQLOperator} to use
-     * @return  An instance of RxWhere
+     * @return An instance of RxWhere
      */
-    public RxWhere<TModel> and(SQLOperator condition){
+    public RxWhere<TModel> and(SQLOperator condition) {
         mRealWhere.and(condition);
 
+        return this;
+    }
+
+    /**
+     * Adds a param to the WHERE clause with the custom {@link SQLOperator}
+     *
+     * @param condition The {@link SQLOperator} to use
+     * @return An instance of RxWhere
+     */
+    public RxWhere<TModel> or(SQLOperator condition) {
+        mRealWhere.or(condition);
         return this;
     }
 
